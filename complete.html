@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Eclipse - Complete Experience</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #1a0a30, #0a0a2e);
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 56px;
+            background: linear-gradient(45deg, #ffeb3b, #ff9800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 24px;
+            color: #ddd;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        
+        .eclipse-alert {
+            background: rgba(255, 107, 0, 0.3);
+            border: 2px solid #ff6f00;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            padding: 60px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 36px;
+            color: #ffeb3b;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .solar-system {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23000"/><circle cx="50" cy="50" r="1" fill="%23fff" opacity="0.3"/></svg>');
+            padding: 80px 20px;
+        }
+        
+        .planets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .planet-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 235, 59, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .planet-card:hover {
+            transform: translateY(-10px);
+            border-color: #ffeb3b;
+            box-shadow: 0 0 30px rgba(255, 235, 59, 0.3);
+        }
+        
+        .planet-emoji {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        
+        .eclipse-explanation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .explanation-card {
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.8), rgba(20, 20, 40, 0.9));
+            border: 2px solid #4da6ff;
+            border-radius: 15px;
+            padding: 30px;
+        }
+        
+        .explanation-card h3 {
+            color: #4da6ff;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .live-streams {
+            background: rgba(10, 10, 30, 0.5);
+        }
+        
+        .stream-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .stream-card {
+            background: #000;
+            border: 2px solid #ff6f00;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .stream-header {
+            background: rgba(255, 107, 0, 0.3);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .live-badge {
+            background: #ff0000;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        iframe {
+            width: 100%;
+            height: 350px;
+            border: none;
+        }
+        
+        .cta-button {
+            padding: 20px 40px;
+            background: linear-gradient(45deg, #e91e63, #9c27b0);
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(233, 30, 99, 0.6);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(233, 30, 99, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <h1>☀️ SOLAR ECLIPSE — August 12, 2026</h1>
+        <p>Experience the cosmic alignment that creates one of nature's most spectacular phenomena</p>
+        <div class="eclipse-alert">
+            <div style="font-size: 20px; color: #ff6f00; font-weight: 700; margin-bottom: 10px;">🔴 HAPPENING TODAY</div>
+            <div style="font-size: 14px; color: #ddd;">
+                Watch the Moon pass between Earth and the Sun<br>
+                <strong style="color: #ffeb3b;">London: 18:17-20:06 BST (92.5% coverage)</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- WHAT IS AN ECLIPSE -->
+    <div class="section">
+        <h2 class="section-title">🌑 What Is A Solar Eclipse?</h2>
+        <div class="eclipse-explanation">
+            <div class="explanation-card">
+                <h3>The Alignment</h3>
+                <div style="font-size: 48px; margin: 20px 0;">☀️ → 🌑 → 🌍</div>
+                <p>A solar eclipse happens when the Moon moves between the Sun and Earth, blocking the Sun's light and casting a shadow on Earth.</p>
+            </div>
+            
+            <div class="explanation-card">
+                <h3>Perfect Timing</h3>
+                <p><strong>The Moon</strong> is 400 times smaller than the Sun<br>
+                <strong>But also</strong> 400 times closer to Earth<br>
+                <strong>Result:</strong> They appear the same size in the sky!<br><br>
+                This cosmic coincidence makes total solar eclipses possible.</p>
+            </div>
+            
+            <div class="explanation-card">
+                <h3>The Shadows</h3>
+                <p><strong>🌑 Umbra:</strong> The darkest shadow where you see total eclipse<br><br>
+                <strong>🌘 Penumbra:</strong> The lighter outer shadow where you see partial eclipse<br><br>
+                The shadow races across Earth at 2,000 km/h!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOLAR SYSTEM -->
+    <div class="section solar-system">
+        <h2 class="section-title">🌍 Our Solar System</h2>
+        <p style="text-align: center; color: #ddd; margin-bottom: 40px; font-size: 18px;">
+            Click each planet to learn more about our cosmic neighborhood
+        </p>
+        <div class="planets-grid">
+            <div class="planet-card" onclick="showPlanetInfo('Sun')">
+                <div class="planet-emoji">☀️</div>
+                <div style="font-weight: 700; color: #ffeb3b;">Sun</div>
+                <div style="font-size: 12px; color: #888;">Our Star</div>
+            </div>
+            <div class="planet-card" onclick="showPlanetInfo('Mercury')">
+                <div class="planet-emoji" style="color: #aaa;">🪨</div>
+                <div style="font-weight: 700;">Mercury</div>
+                <div style="font-size: 12px; color: #888;">Smallest</div>
+            </div>
+            <div class="planet-card" onclick="showPlanetInfo('Venus')">
+                <div class="planet-emoji" style="color: #ff9800;">🌕</div>
+                <div style="font-weight: 700;">Venus</div>
+                <div style="font-size: 12px; color: #888;">Hottest</div>
+            </div>
+            <div class="planet-card" onclick="showPlanetInfo('Earth')">
+                <div class="planet-emoji">🌍</div>
+                <div style="font-weight: 700; color: #4da6ff;">Earth</div>
+                <div style="font-size: 12px; color: #888;">Our Home</div>
+            </div>
+            <div class="planet-card" onclick="showPlanetInfo('Mars')">
+                <div class="planet-emoji" style="color: #ff6f00;">🔴</div>
+                <div style="font-weight: 700;">Mars</div>
+                <div style="font-size: 12px; color: #888;">Red Planet</div>
+            </div>
+            <div class="planet-card" onclick="showPlanetInfo('Jupiter')">
+                <div class="planet-emoji" style="color: #ffb74d;">🪐</div>
+                <div style="font-weight: 700;">Jupiter</div>
+                <div style="font-size: 12px; color: #888;">Largest</div>
+            </div>
+            <div class="planet-card" onclick="showPlanetInfo('Saturn')">
+                <div class="planet-emoji" style="color: #ffd54f;">🪐</div>
+                <div style="font-weight: 700;">Saturn</div>
+                <div style="font-size: 12px; color: #888;">Rings</div>
+            </div>
+            <div class="planet-card" onclick="showPlanetInfo('Uranus')">
+                <div class="planet-emoji" style="color: #4fc3f7;">🌐</div>
+                <div style="font-weight: 700;">Uranus</div>
+                <div style="font-size: 12px; color: #888;">Tilted</div>
+            </div>
+            <div class="planet-card" onclick="showPlanetInfo('Neptune')">
+                <div class="planet-emoji" style="color: #2979ff;">🌊</div>
+                <div style="font-weight: 700;">Neptune</div>
+                <div style="font-size: 12px; color: #888;">Windiest</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE STREAMS -->
+    <div class="section live-streams">
+        <h2 class="section-title">📺 Watch Space LIVE</h2>
+        <p style="text-align: center; color: #ddd; margin-bottom: 40px; font-size: 18px;">
+            Real-time views from NASA and space agencies around the world
+        </p>
+        <div class="stream-grid">
+            <div class="stream-card">
+                <div class="stream-header">
+                    <span style="font-weight: 700;">NASA TV - Official Channel</span>
+                    <div class="live-badge">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+                <iframe src="https://www.youtube.com/embed/21X5lGlDOfg" allowfullscreen></iframe>
+            </div>
+
+            <div class="stream-card">
+                <div class="stream-header">
+                    <span style="font-weight: 700;">International Space Station</span>
+                    <div class="live-badge">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+                <iframe src="https://www.youtube.com/embed/P9C25Un7xaM" allowfullscreen></iframe>
+            </div>
+
+            <div class="stream-card">
+                <div class="stream-header">
+                    <span style="font-weight: 700;">Earth from Space</span>
+                    <div class="live-badge">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+                <iframe src="https://www.youtube.com/embed/86YLFOog4GM" allowfullscreen></iframe>
+            </div>
+
+            <div class="stream-card">
+                <div class="stream-header">
+                    <span style="font-weight: 700;">Space News & Updates</span>
+                    <div class="live-badge">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+                <iframe src="https://www.youtube.com/embed/nA9UZF-SZoQ" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="section" style="text-align: center;">
+        <h2 class="section-title">Ready to Create Your Own Eclipse?</h2>
+        <p style="font-size: 18px; color: #ddd; margin-bottom: 30px;">
+            Drag the Moon, chase the shadow, and experience the eclipse from London
+        </p>
+        <a href="unique.html" class="cta-button">🌑 CREATE ECLIPSE EXPERIENCE</a>
+    </div>
+
+    <script>
+        function showPlanetInfo(planet) {
+            const info = {
+                'Sun': 'The Sun is a star at the center of our Solar System. It contains 99.86% of the system\'s mass!',
+                'Mercury': 'Mercury is the smallest planet and closest to the Sun. A year on Mercury is just 88 Earth days!',
+                'Venus': 'Venus is the hottest planet despite not being closest to the Sun, with surface temperatures of 462°C.',
+                'Earth': 'Earth is our home planet, the only known world with liquid water and life.',
+                'Mars': 'Mars, the Red Planet, has the largest volcano in the solar system: Olympus Mons.',
+                'Jupiter': 'Jupiter is the largest planet, with a mass 2.5 times that of all other planets combined!',
+                'Saturn': 'Saturn is famous for its stunning ring system made of ice and rock particles.',
+                'Uranus': 'Uranus rotates on its side at a 98-degree angle!',
+                'Neptune': 'Neptune has the strongest winds in the solar system, reaching 2,000 km/h.'
+            };
+            
+            alert(planet + '\n\n' + info[planet]);
+        }
+    </script>
+</body>
+</html>

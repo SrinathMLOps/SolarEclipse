@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Eclipse - Real Time Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to bottom, rgba(20, 20, 30, 0.9), rgba(10, 10, 10, 0.8));
+            padding: 20px 30px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffeb3b;
+            letter-spacing: 1px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background: rgba(255, 235, 59, 0.2);
+            border: 1px solid #ffeb3b;
+            color: #ffeb3b;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #ffeb3b;
+            color: #000;
+        }
+
+        .control-btn.active {
+            background: #ffeb3b;
+            color: #000;
+        }
+
+        .time-info {
+            display: flex;
+            gap: 30px;
+            font-size: 12px;
+        }
+
+        .time-item {
+            text-align: center;
+        }
+
+        .time-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffeb3b;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+            height: calc(100vh - 140px);
+        }
+
+        .view-card {
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.6), rgba(20, 20, 40, 0.8));
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .become-moon-card {
+            background: linear-gradient(135deg, rgba(50, 30, 80, 0.6), rgba(30, 20, 60, 0.8));
+            border: 2px solid #9c27b0;
+            position: relative;
+        }
+
+        .wavelength-btn {
+            padding: 6px 12px;
+            background: rgba(255, 235, 59, 0.2);
+            border: 1px solid #ffeb3b;
+            color: #ffeb3b;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .wavelength-btn:hover {
+            background: rgba(255, 235, 59, 0.4);
+            box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);
+        }
+
+        .wavelength-btn.active {
+            background: #ffeb3b;
+            color: #000;
+        }
+
+        .moon-control-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+        }
+
+        .alignment-display {
+            font-size: 48px;
+            color: #9c27b0;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .celestial-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .draggable-moon {
+            font-size: 48px;
+            cursor: grab;
+            position: relative;
+            transition: transform 0.1s ease;
+            user-select: none;
+        }
+
+        .draggable-moon:active {
+            cursor: grabbing;
+            transform: scale(1.2);
+        }
+
+        .alignment-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #ffeb3b, transparent, #4da6ff);
+            top: 50%;
+            z-index: 0;
+        }
+
+        .eclipse-created {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            animation: celebrateEclipse 0.5s ease;
+        }
+
+        .eclipse-created.show {
+            display: flex;
+        }
+
+        @keyframes celebrateEclipse {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .sparkle {
+            font-size: 36px;
+            animation: sparkle 1s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .shadow-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .shadow-view.show {
+            display: flex;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #9c27b0, #e91e63);
+            border: none;
+            color: white;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(156, 39, 176, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(156, 39, 176, 0.9);
+        }
+
+        .view-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffeb3b;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .view-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .telescope-circle {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #1a1a2e, #000);
+            border: 4px solid #444;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .celestial-body {
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .sun {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 35% 35%, #ffeb3b, #ff9800, #ff6f00);
+            box-shadow: 0 0 50px #ffeb3b, 0 0 80px rgba(255, 235, 59, 0.4);
+            z-index: 1;
+            position: relative;
+        }
+
+        .corona {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 235, 59, 0.6), 0 0 60px rgba(255, 200, 0, 0.3);
+            z-index: 0;
+        }
+
+        .sun-detail {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 150, 0.3), transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(255, 150, 0, 0.2), transparent 50%);
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .moon {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 25% 25%, #e0e0e0, #a0a0a0, #404040);
+            box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+            position: relative;
+        }
+
+        .moon-craters {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle 8px at 30% 25%, rgba(0, 0, 0, 0.4), transparent),
+                radial-gradient(circle 5px at 60% 50%, rgba(0, 0, 0, 0.3), transparent),
+                radial-gradient(circle 6px at 45% 65%, rgba(0, 0, 0, 0.35), transparent),
+                radial-gradient(circle 4px at 70% 30%, rgba(0, 0, 0, 0.3), transparent);
+            z-index: 1;
+        }
+
+        .umbra {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.7);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .penumbra {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.2), transparent 80%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .reticle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .reticle-h, .reticle-v {
+            position: absolute;
+            background: rgba(255, 235, 59, 0.15);
+        }
+
+        .reticle-h {
+            width: 100%;
+            height: 1px;
+            top: 50%;
+        }
+
+        .reticle-v {
+            width: 1px;
+            height: 100%;
+            left: 50%;
+        }
+
+        .crosshair {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(255, 235, 59, 0.4);
+            border-radius: 50%;
+        }
+
+        /* Earth visualization */
+        .earth {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4da6ff, #0066cc, #001a4d);
+            box-shadow: 0 0 15px rgba(77, 166, 255, 0.4), inset -2px -2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 0;
+            opacity: 0.9;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .earth-continents {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-image: 
+                radial-gradient(circle 6px at 25% 35%, #22aa22, transparent 40%),
+                radial-gradient(circle 4px at 45% 50%, #228822, transparent 40%),
+                radial-gradient(circle 5px at 70% 25%, #1a8822, transparent 40%),
+                radial-gradient(circle 3px at 60% 60%, #2a9a2a, transparent 40%);
+            z-index: 1;
+        }
+
+        .earth-label {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            font-size: 9px;
+            color: #4da6ff;
+            font-weight: 600;
+            z-index: 2;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Orbital path indicators */
+        .orbital-line {
+            position: absolute;
+            border: 1px dashed rgba(255, 235, 59, 0.2);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .orbital-label {
+            position: absolute;
+            font-size: 9px;
+            color: rgba(255, 235, 59, 0.6);
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.9);
+            font-family: 'Courier New', monospace;
+        }
+
+        .sun-distance-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 9px;
+            color: #ffeb3b;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 3px;
+        }
+
+        .moon-distance-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 9px;
+            color: #aaa;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 3px;
+        }
+
+        .info-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #ffeb3b;
+        }
+
+        .controls-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #333;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffeb3b;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(255, 235, 59, 0.6);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ffeb3b;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 8px rgba(255, 235, 59, 0.6);
+        }
+
+        .control-value {
+            font-size: 11px;
+            color: #ffeb3b;
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 10px;
+            background: rgba(255, 107, 0, 0.8);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: #ff6f00;
+            box-shadow: 0 0 15px rgba(255, 107, 0, 0.6);
+        }
+
+        .status-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .status-item {
+            font-size: 11px;
+        }
+
+        .status-label {
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .status-value {
+            color: #ffeb3b;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .locations-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .location-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .location-card.clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .location-card.clickable:hover {
+            border-color: #ffeb3b;
+            background: rgba(255, 235, 59, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .location-card.active {
+            border-color: #ffeb3b;
+            background: rgba(255, 235, 59, 0.15);
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.3);
+        }
+
+        .location-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffeb3b;
+            margin-bottom: 8px;
+        }
+
+        .location-time {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 6px;
+        }
+
+        .location-info {
+            font-size: 10px;
+            color: #888;
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: #4CAF50;
+            margin-top: 8px;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .progress-bar-container {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #ff6f00, #ffeb3b);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-label {
+            font-size: 10px;
+            color: #888;
+            margin-top: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">☀️ SOLAR ECLIPSE — Live Observer</div>
+        <div class="header-controls">
+            <button class="control-btn" id="pauseBtn">⏸ Pause</button>
+            <button class="control-btn active" id="playBtn">▶ Real time</button>
+            <button class="control-btn" id="resetBtn">⟲ Reset</button>
+        </div>
+    </div>
+
+    <div style="background: rgba(255, 107, 0, 0.2); padding: 12px 20px; text-align: center; border-bottom: 1px solid #ff6f00;">
+        <div style="font-size: 16px; color: #ff6f00; font-weight: 700;">🔴 ECLIPSE HAPPENING TODAY — August 12, 2026</div>
+        <div style="font-size: 11px; color: #ffb74d; margin-top: 4px;">Check the times below for your location</div>
+    </div>
+
+    <div class="main-container">
+        <!-- LEFT SIDE - ICELAND VIEW -->
+        <div class="view-card">
+            <div class="view-title">🔭 Iceland — Path of Totality</div>
+            <div class="view-content">
+                <div class="telescope-circle">
+                    <!-- Distance labels -->
+                    <div class="sun-distance-label">☀️ 149.6M km</div>
+                    <div class="moon-distance-label">🌑 384,400 km</div>
+
+                    <!-- Orbital paths (for context) -->
+                    <div style="position: absolute; width: 280px; height: 280px; border: 1px dashed rgba(255, 235, 59, 0.1); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
+
+                    <!-- Earth in corner -->
+                    <div class="earth">
+                        <div class="earth-continents"></div>
+                        <div class="earth-label">🌍 Earth</div>
+                    </div>
+
+                    <div class="reticle">
+                        <div class="reticle-h"></div>
+                        <div class="reticle-v"></div>
+                        <div class="crosshair"></div>
+                    </div>
+                    
+                    <!-- Sun with Corona -->
+                    <div class="corona" id="coronaGlow"></div>
+                    <div class="sun celestial-body" id="sunBody">
+                        <div class="sun-detail"></div>
+                    </div>
+                    
+                    <!-- Moon with Umbra/Penumbra -->
+                    <div class="penumbra" id="penumbra"></div>
+                    <div class="umbra" id="umbra"></div>
+                    <div class="moon celestial-body" id="moonBody">
+                        <div class="moon-craters"></div>
+                    </div>
+
+                    <div class="info-overlay" id="phaseLabel">First Contact</div>
+                </div>
+            </div>
+
+            <!-- Scientific Info Panel -->
+            <div style="margin-top: 15px; padding: 15px; background: rgba(255, 235, 59, 0.1); border-left: 3px solid #ffeb3b; border-radius: 4px; font-size: 10px; line-height: 1.8; color: #ddd;">
+                <div style="margin-bottom: 10px;">
+                    <strong style="color: #ffeb3b;">🔬 ECLIPSE GEOMETRY & ORBITAL MECHANICS:</strong>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div>
+                        <span style="color: #ffeb3b;">☀️ Sun:</span> 1.39M km dia<br>
+                        <span style="color: #ffeb3b;">� Earth:</span> 12,742 km dia<br>
+                        <span style="color: #ffeb3b;">�🌑 Moon:</span> 3,474 km dia
+                    </div>
+                    <div>
+                        <span style="color: #ffeb3b;">☀️-🌍:</span> 149.6M km<br>
+                        <span style="color: #ffeb3b;">🌍-🌑:</span> 384,400 km<br>
+                        <span style="color: #ffeb3b;">🌑-☀️:</span> 150M km
+                    </div>
+                </div>
+                <div style="margin-top: 8px; border-top: 1px solid rgba(255, 235, 59, 0.3); padding-top: 8px;">
+                    <strong style="color: #ffeb3b;">📐 Shadow Geometry:</strong><br>
+                    <span id="shadowInfo">Umbra: calculating... | Penumbra: calculating...</span><br>
+                    <strong style="color: #4da6ff; margin-top: 6px; display: block;">🌍 Earth Position: Aligned in Sun-Moon axis</strong>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <div class="control-group">
+                    <label class="control-label">Moon Position</label>
+                    <input type="range" id="eclipseSlider" min="0" max="100" step="0.5" value="0">
+                    <div class="control-value" id="eclipseValue">0% Coverage</div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-label" id="progressLabel">First Contact</div>
+                </div>
+
+                <div class="status-display">
+                    <div class="status-item">
+                        <span class="status-label">Phase</span>
+                        <div class="status-value" id="phaseStatus">First Contact</div>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Coverage</span>
+                        <div class="status-value" id="coverageStatus">0%</div>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Sun Alt.</span>
+                        <div class="status-value" id="altitudeStatus">45.2°</div>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Time Left</span>
+                        <div class="status-value" id="timeLeftStatus">10m 00s</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn" id="zoomInBtn">🔍+ Zoom</button>
+                    <button class="btn" id="zoomOutBtn">🔍- Zoom</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE - LOCATIONS & DATA -->
+        <div class="view-card">
+            <div class="view-title">📍 Eclipse Locations - Live Times</div>
+            <div class="view-content" style="flex-direction: column; justify-content: flex-start; padding-top: 10px;">
+                <div class="locations-grid">
+                    <div class="location-card clickable" data-location="iceland" data-coverage="100" data-altitude="24.5" data-phase="Total">
+                        <div class="location-name">🇮🇸 Reykjavik, Iceland</div>
+                        <div class="location-time" id="time-iceland">17:48:00</div>
+                        <div class="location-info">
+                            <strong>🕐 Eclipse Times (GMT):</strong><br>
+                            Start: 16:47 | Max: 17:48 | End: 18:47<br>
+                            <strong>Duration:</strong> 1 minute totality
+                        </div>
+                        <div class="live-indicator">
+                            <div class="live-dot"></div>
+                            Live Clock
+                        </div>
+                    </div>
+
+                    <div class="location-card clickable" data-location="spain" data-coverage="100" data-altitude="15.0" data-phase="Total">
+                        <div class="location-name">🇪🇸 Gijón, Spain</div>
+                        <div class="location-time" id="time-spain">20:26:00</div>
+                        <div class="location-info">
+                            <strong>🕐 Eclipse Times (CEST):</strong><br>
+                            Totality: ~20:26<br>
+                            <strong>Northern Spain:</strong> Path of totality
+                        </div>
+                        <div class="live-indicator">
+                            <div class="live-dot"></div>
+                            Live Clock
+                        </div>
+                    </div>
+
+                    <div class="location-card clickable" data-location="uk" data-coverage="92.5" data-altitude="8.0" data-phase="Partial">
+                        <div class="location-name">🇬🇧 London, UK</div>
+                        <div class="location-time" id="time-uk">19:13:00</div>
+                        <div class="location-info">
+                            <strong>🕐 Eclipse Times (BST):</strong><br>
+                            Start: 18:17 | Max: 19:13 | End: 20:06<br>
+                            <strong>Coverage:</strong> 92.5% (Spectacular!)
+                        </div>
+                        <div class="live-indicator">
+                            <div class="live-dot"></div>
+                            Live Clock
+                        </div>
+                    </div>
+
+                    <div class="location-card clickable" data-location="ny" data-coverage="0" data-altitude="0" data-phase="None">
+                        <div class="location-name">🌍 New York, USA</div>
+                        <div class="location-time" id="time-ny">14:30:00</div>
+                        <div class="location-info">
+                            <strong>Not Visible</strong><br>
+                            Eclipse occurs during daylight<br>
+                            on the opposite side of Earth
+                        </div>
+                        <div class="live-indicator">
+                            <div class="live-dot"></div>
+                            Live Clock
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255, 235, 59, 0.1); border-left: 3px solid #ffeb3b; border-radius: 4px; font-size: 11px; line-height: 1.6; color: #ddd;">
+                    <strong>📺 Live Feeds Available NOW:</strong><br>
+                    • NASA Observatory (Iceland)<br>
+                    • European Southern Observatory (Spain)<br>
+                    • BBC Sky at Night (UK)<br>
+                    <strong style="color: #ff6f00; margin-top: 8px; display: block; font-size: 14px;">🔴 HAPPENING TODAY: August 12, 2026</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- THIRD COLUMN - NASA LIVE SOLAR OBSERVATORY -->
+        <div class="view-card" style="background: linear-gradient(135deg, rgba(50, 30, 20, 0.6), rgba(30, 20, 10, 0.8)); border: 2px solid #ff6f00;">
+            <div class="view-title" style="color: #ff6f00;">🔭 NASA Solar Observatory — Live View</div>
+            
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="wavelength-btn active" onclick="switchStream('nasa')">NASA TV</button>
+                    <button class="wavelength-btn" onclick="switchStream('sdo')">SDO Live</button>
+                    <button class="wavelength-btn" onclick="switchStream('iss')">ISS Live</button>
+                    <button class="wavelength-btn" onclick="switchStream('space')">SpaceX</button>
+                </div>
+
+                <div style="flex: 1; background: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                    <!-- NASA TV Live Stream (Always works) -->
+                    <iframe id="nasaLiveStream" 
+                            width="100%" 
+                            height="100%" 
+                            src="https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1&mute=0&controls=1" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            allowfullscreen
+                            style="border-radius: 10px; min-height: 350px;">
+                    </iframe>
+                    
+                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(255, 0, 0, 0.9); padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; z-index: 10;">
+                        <div style="width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse 1s infinite;"></div>
+                        LIVE
+                    </div>
+                    
+                    <div id="nasaFallback" style="display: none; flex-direction: column; align-items: center; gap: 15px; position: absolute;">
+                        <div style="font-size: 64px;">☀️</div>
+                        <div style="font-size: 14px; color: #ff6f00;">NASA TV Live</div>
+                        <div style="font-size: 12px; color: #888;">Loading stream...</div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.5); padding: 12px; border-radius: 5px;">
+                    <div style="font-size: 11px; color: #ff6f00; font-weight: 700; margin-bottom: 8px;">📡 LIVE STREAM (24/7)</div>
+                    <div id="wavelengthInfo" style="font-size: 11px; color: #ddd; line-height: 1.6;">
+                        <strong>NASA TV</strong> — Official Channel<br>
+                        Live coverage of space events & missions
+                    </div>
+                </div>
+
+                <div style="background: rgba(255, 107, 0, 0.2); padding: 10px; border-radius: 5px; border-left: 3px solid #ff6f00;">
+                    <div style="font-size: 10px; color: #ffb74d; line-height: 1.6;">
+                        <strong>🔬 Features Visible:</strong><br>
+                        • Active regions & sunspots<br>
+                        • Solar flares & prominences<br>
+                        • Coronal mass ejections<br>
+                        • Magnetic field structures
+                    </div>
+                </div>
+
+                <button class="btn" style="width: 100%;" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+                <a href="unique.html" style="text-decoration: none;">
+                    <button class="mission-button" style="width: 100%; padding: 10px;">🌑 CREATE ECLIPSE</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Solar Eclipse Viewer - Astronomer Level Scientific Visualization
+        const sunBody = document.getElementById('sunBody');
+        const moonBody = document.getElementById('moonBody');
+        const umbra = document.getElementById('umbra');
+        const penumbra = document.getElementById('penumbra');
+        const coronaGlow = document.getElementById('coronaGlow');
+        const eclipseSlider = document.getElementById('eclipseSlider');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+
+        const eclipseValue = document.getElementById('eclipseValue');
+        const phaseLabel = document.getElementById('phaseLabel');
+        const phaseStatus = document.getElementById('phaseStatus');
+        const coverageStatus = document.getElementById('coverageStatus');
+        const altitudeStatus = document.getElementById('altitudeStatus');
+        const timeLeftStatus = document.getElementById('timeLeftStatus');
+        const progressFill = document.getElementById('progressFill');
+        const progressLabel = document.getElementById('progressLabel');
+        const viewTitle = document.querySelector('.view-title');
+        const shadowInfo = document.getElementById('shadowInfo');
+
+        let isPlaying = true;
+        let zoomLevel = 1;
+        const telescopeCircle = document.querySelector('.telescope-circle');
+        
+        // Astronomical constants (in km)
+        const SUN_DIAMETER = 1391000;
+        const MOON_DIAMETER = 3474;
+        const EARTH_SUN_DISTANCE = 149600000;
+        const EARTH_MOON_DISTANCE = 384400;
+
+        // Location data with specific eclipse characteristics
+        const locations = {
+            'iceland': {
+                name: 'Reykjavik, Iceland',
+                maxCoverage: 100,
+                maxAltitude: 24.5,
+                phaseType: 'Total',
+                startTime: new Date('2026-08-12T16:47:00Z'),
+                timezone: 0,
+                latitude: 64.1466,
+                umbralWidth: 270
+            },
+            'spain': {
+                name: 'Gijón, Spain',
+                maxCoverage: 100,
+                maxAltitude: 15.0,
+                phaseType: 'Total',
+                startTime: new Date('2026-08-12T19:00:00Z'),
+                timezone: 2,
+                latitude: 43.5453,
+                umbralWidth: 200
+            },
+            'uk': {
+                name: 'London, UK',
+                maxCoverage: 92.5,
+                maxAltitude: 8.0,
+                phaseType: 'Partial',
+                startTime: new Date('2026-08-12T17:17:00Z'),
+                timezone: 1,
+                latitude: 51.5074,
+                umbralWidth: 0
+            },
+            'ny': {
+                name: 'New York, USA',
+                maxCoverage: 0,
+                maxAltitude: 0,
+                phaseType: 'None',
+                startTime: new Date('2026-08-12T18:00:00Z'),
+                timezone: -4,
+                latitude: 40.7128,
+                umbralWidth: 0
+            }
+        };
+
+        let currentLocation = 'iceland';
+
+        const phases = {
+            'First Contact': { min: 0, max: 15, desc: 'Moon starts entering Sun' },
+            'Partial Phase': { min: 15, max: 50, desc: 'Partial eclipse underway' },
+            'Total Phase': { min: 50, max: 85, desc: 'Total eclipse - Corona visible!' },
+            'Third Contact': { min: 85, max: 100, desc: 'Moon exits Sun' }
+        };
+
+        function getPhase(progress) {
+            if (progress < 15) return 'First Contact';
+            if (progress < 50) return 'Partial Phase';
+            if (progress < 85) return 'Total Phase';
+            return 'Third Contact';
+        }
+
+        // Calculate shadow dimensions based on progress
+        function calculateShadowDimensions(progress, location) {
+            const maxUmbralWidth = location.umbralWidth;
+            const umbralDiameter = (progress / 100) * maxUmbralWidth * 0.8; // Scale down for visual
+            const penumbraDiameter = umbralDiameter * 3; // Penumbra is ~3x umbra
+            
+            return {
+                umbra: Math.max(0, Math.min(100, umbralDiameter / 2)),
+                penumbra: Math.max(0, Math.min(150, penumbraDiameter / 2))
+            };
+        }
+
+        function updateEclipse() {
+            const progress = parseFloat(eclipseSlider.value);
+            const location = locations[currentLocation];
+            
+            // Scale progress based on location's max coverage
+            const scaledProgress = (progress / 100) * location.maxCoverage;
+            
+            // Moon animation - moves across sun
+            const moonOffset = (scaledProgress / 100) * 150 - 75;
+            const moonOpacity = Math.min(1, scaledProgress / 50);
+            
+            moonBody.style.transform = `translate(${moonOffset}px, 0) scale(1)`;
+            moonBody.style.opacity = moonOpacity;
+            
+            // Sun visibility during eclipse
+            const sunOpacity = Math.max(0.3, 1 - (scaledProgress / 100) * 0.7);
+            sunBody.style.opacity = sunOpacity;
+            
+            // Corona visibility - visible during totality
+            const coronaOpacity = scaledProgress > 50 ? Math.min(1, (scaledProgress - 50) / 20) : 0;
+            coronaGlow.style.opacity = coronaOpacity;
+            coronaGlow.style.transform = `translate(${moonOffset}px, 0)`;
+            
+            // Shadow calculations
+            const shadows = calculateShadowDimensions(scaledProgress, location);
+            
+            // Umbra (darkest shadow)
+            if (shadows.umbra > 0) {
+                umbra.style.width = `${shadows.umbra * 2}px`;
+                umbra.style.height = `${shadows.umbra * 2}px`;
+                umbra.style.left = `50%`;
+                umbra.style.top = `50%`;
+                umbra.style.transform = `translate(-50%, -50%) translateX(${moonOffset}px)`;
+                umbra.style.opacity = '1';
+            } else {
+                umbra.style.opacity = '0';
+            }
+            
+            // Penumbra (lighter shadow)
+            if (shadows.penumbra > 0) {
+                penumbra.style.width = `${shadows.penumbra * 2}px`;
+                penumbra.style.height = `${shadows.penumbra * 2}px`;
+                penumbra.style.left = `50%`;
+                penumbra.style.top = `50%`;
+                penumbra.style.transform = `translate(-50%, -50%) translateX(${moonOffset}px)`;
+                penumbra.style.opacity = '1';
+            } else {
+                penumbra.style.opacity = '0';
+            }
+            
+            // Update labels
+            let phase = getPhase(progress);
+            if (currentLocation === 'ny') {
+                phase = 'Not Visible';
+            } else if (currentLocation === 'uk' && progress > 50) {
+                phase = 'Partial Phase';
+            }
+            
+            phaseLabel.textContent = phase;
+            phaseStatus.textContent = phase;
+            coverageStatus.textContent = `${scaledProgress.toFixed(1)}%`;
+            eclipseValue.textContent = `${scaledProgress.toFixed(1)}% Coverage`;
+            
+            // Progress bar
+            progressFill.style.width = `${scaledProgress}%`;
+            progressLabel.textContent = phase;
+            
+            // Altitude - varies by location
+            const altitude = location.maxAltitude * (progress / 100);
+            altitudeStatus.textContent = `${altitude.toFixed(1)}°`;
+            
+            // Shadow info for astronomers
+            const umbralSize = shadows.umbra > 0 ? (location.umbralWidth * (scaledProgress / 100)).toFixed(0) : 0;
+            const coronaVisible = scaledProgress > 50 ? 'VISIBLE ✓' : 'hidden';
+            shadowInfo.textContent = `Umbra: ${umbralSize}km wide | Corona: ${coronaVisible} | Latitude: ${location.latitude}°`;
+            
+            // Time remaining
+            const totalSeconds = 600;
+            const remainingSeconds = Math.max(0, totalSeconds - (progress / 100) * totalSeconds);
+            const mins = Math.floor(remainingSeconds / 60);
+            const secs = Math.floor(remainingSeconds % 60);
+            timeLeftStatus.textContent = `${mins}m ${secs.toString().padStart(2, '0')}s`;
+        }
+
+        function updateLocationTimes() {
+            // Get current time
+            const now = new Date();
+
+            // Iceland - GMT
+            document.getElementById('time-iceland').textContent = now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Atlantic/Reykjavik'});
+
+            // Spain - CEST (UTC+2)
+            document.getElementById('time-spain').textContent = now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Europe/Madrid'});
+
+            // UK - BST (UTC+1)
+            document.getElementById('time-uk').textContent = now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Europe/London'});
+
+            // New York - EDT (UTC-4)
+            document.getElementById('time-ny').textContent = now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'America/New_York'});
+        }
+
+        // Update times every second for live clock
+        setInterval(updateLocationTimes, 1000);
+
+        function switchLocation(locationKey) {
+            document.querySelectorAll('.location-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            document.querySelector(`[data-location="${locationKey}"]`).classList.add('active');
+            currentLocation = locationKey;
+            const location = locations[locationKey];
+            
+            viewTitle.textContent = `🔭 ${location.name} — ${location.phaseType} Phase`;
+            updateEclipse();
+        }
+
+        function animate() {
+            if (isPlaying && parseFloat(eclipseSlider.value) < 100) {
+                eclipseSlider.value = parseFloat(eclipseSlider.value) + 0.25;
+                updateEclipse();
+                updateLocationTimes();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // Event listeners for location cards
+        document.querySelectorAll('.location-card.clickable').forEach(card => {
+            card.addEventListener('click', () => {
+                switchLocation(card.dataset.location);
+            });
+        });
+
+        eclipseSlider.addEventListener('input', () => {
+            if (!isPlaying) {
+                updateEclipse();
+                updateLocationTimes();
+            }
+        });
+
+        playBtn.addEventListener('click', () => {
+            isPlaying = true;
+            playBtn.classList.add('active');
+            pauseBtn.classList.remove('active');
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            isPlaying = false;
+            playBtn.classList.remove('active');
+            pauseBtn.classList.add('active');
+        });
+
+        resetBtn.addEventListener('click', () => {
+            isPlaying = false;
+            eclipseSlider.value = 0;
+            zoomLevel = 1;
+            telescopeCircle.style.transform = `scale(${zoomLevel})`;
+            playBtn.classList.add('active');
+            pauseBtn.classList.remove('active');
+            updateEclipse();
+            updateLocationTimes();
+        });
+
+        zoomInBtn.addEventListener('click', () => {
+            zoomLevel = Math.min(2.5, zoomLevel + 0.25);
+            telescopeCircle.style.transform = `scale(${zoomLevel})`;
+        });
+
+        zoomOutBtn.addEventListener('click', () => {
+            zoomLevel = Math.max(0.75, zoomLevel - 0.25);
+            telescopeCircle.style.transform = `scale(${zoomLevel})`;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                isPlaying = !isPlaying;
+                if (isPlaying) {
+                    playBtn.classList.add('active');
+                    pauseBtn.classList.remove('active');
+                } else {
+                    playBtn.classList.remove('active');
+                    pauseBtn.classList.add('active');
+                }
+            }
+        });
+
+        // Initialize
+        document.querySelector('[data-location="iceland"]').classList.add('active');
+        updateEclipse();
+        updateLocationTimes();
+        animate();
+
+        // NASA Live Streaming Functions
+        const liveStreams = {
+            'nasa': {
+                url: 'https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1&mute=0&controls=1',
+                info: '<strong>NASA TV</strong> — Official Channel<br>Live coverage of space events & missions'
+            },
+            'sdo': {
+                url: 'https://www.youtube.com/embed/gsBlLyEP97w?autoplay=1&mute=0&controls=1',
+                info: '<strong>Solar Dynamics Observatory</strong><br>Live views of the Sun in multiple wavelengths'
+            },
+            'iss': {
+                url: 'https://www.youtube.com/embed/P9C25Un7xaM?autoplay=1&mute=0&controls=1',
+                info: '<strong>ISS Live Feed</strong><br>View Earth from International Space Station'
+            },
+            'space': {
+                url: 'https://www.youtube.com/embed/s86-Z-CbaHA?autoplay=1&mute=0&controls=1',
+                info: '<strong>SpaceX Live</strong><br>Live coverage of SpaceX missions'
+            }
+        };
+
+        function switchStream(stream) {
+            document.querySelectorAll('.wavelength-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const data = liveStreams[stream];
+            const iframe = document.getElementById('nasaLiveStream');
+            const info = document.getElementById('wavelengthInfo');
+            
+            iframe.src = data.url;
+            info.innerHTML = data.info;
+        }
+
+        function toggleFullscreen() {
+            const iframe = document.getElementById('nasaLiveStream');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) {
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) {
+                iframe.msRequestFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>

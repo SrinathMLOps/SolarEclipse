@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☀️ ECLIPSE MISSION — Immersive Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .mission-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stage {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .stage.active {
+            display: flex;
+        }
+
+        /* STAGE 1: MISSION INTRO */
+        .intro-stage {
+            background: radial-gradient(ellipse at center, #1a1a3e 0%, #000 100%);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .mission-title {
+            font-size: 64px;
+            font-weight: 900;
+            text-align: center;
+            background: linear-gradient(45deg, #ffeb3b, #ff9800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 235, 59, 0.5);
+            letter-spacing: 3px;
+        }
+
+        .mission-subtitle {
+            font-size: 24px;
+            color: #aaa;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .mission-steps {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            margin-top: 40px;
+        }
+
+        .step-badge {
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 235, 59, 0.1);
+            border: 2px solid #ffeb3b;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            gap: 5px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-badge:hover {
+            background: rgba(255, 235, 59, 0.3);
+            transform: scale(1.1);
+        }
+
+        .step-number {
+            font-size: 12px;
+            color: #ffeb3b;
+            font-weight: 700;
+        }
+
+        .mission-button {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ff6f00, #ffb74d);
+            border: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 107, 0, 0.6);
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .mission-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(255, 107, 0, 0.9);
+        }
+
+        /* STAGE 2: SPACE JOURNEY */
+        .space-stage {
+            background: radial-gradient(circle at center, #0a0a2e 0%, #000 100%);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .space-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .journey-info {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ffeb3b;
+            max-width: 400px;
+        }
+
+        .journey-title {
+            font-size: 24px;
+            color: #ffeb3b;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .journey-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #ddd;
+            margin-bottom: 10px;
+        }
+
+        .distance-display {
+            font-size: 12px;
+            color: #4da6ff;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .control-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #ffeb3b;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .next-button {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 10px 20px;
+            background: #ff6f00;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* STAGE 3: SOLAR OBSERVATORY */
+        .observatory-stage {
+            background: #0a0a1a;
+            flex-direction: column;
+        }
+
+        .observatory-header {
+            background: rgba(255, 107, 0, 0.2);
+            padding: 20px;
+            border-bottom: 2px solid #ff6f00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .observatory-title {
+            font-size: 24px;
+            color: #ffeb3b;
+            font-weight: 700;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4CAF50;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        .observatory-content {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .sun-view {
+            flex: 1;
+            background: radial-gradient(circle at center, #1a1a2e, #000);
+            border-radius: 10px;
+            border: 2px solid #ffeb3b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wavelength-button {
+            padding: 8px 16px;
+            background: rgba(255, 235, 59, 0.2);
+            border: 1px solid #ffeb3b;
+            color: #ffeb3b;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .wavelength-button.active {
+            background: #ffeb3b;
+            color: #000;
+        }
+
+        .wavelength-button:hover {
+            box-shadow: 0 0 15px rgba(255, 235, 59, 0.6);
+        }
+
+        .observatory-controls {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-section {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .control-section h3 {
+            font-size: 12px;
+            color: #ffeb3b;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .feature-badge {
+            padding: 10px;
+            background: rgba(255, 107, 0, 0.3);
+            border-left: 3px solid #ff6f00;
+            margin: 8px 0;
+            font-size: 12px;
+            color: #ffb74d;
+            border-radius: 3px;
+        }
+
+        .capture-btn {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .capture-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="mission-container">
+        <!-- STAGE 1: INTRO -->
+        <div class="stage intro-stage active" id="stage1">
+            <div class="mission-title">☀️ ECLIPSE MISSION</div>
+            <div class="mission-subtitle">🔴 HAPPENING TODAY: August 12, 2026 Solar Eclipse<br>Experience it like an astronomer</div>
+            
+            <div class="mission-steps">
+                <div class="step-badge">
+                    <span>🌌</span>
+                    <span class="step-number">EXPLORE</span>
+                </div>
+                <div class="step-badge">
+                    <span>🔭</span>
+                    <span class="step-number">OBSERVE</span>
+                </div>
+                <div class="step-badge">
+                    <span>🌑</span>
+                    <span class="step-number">CONTROL</span>
+                </div>
+                <div class="step-badge">
+                    <span>⚡</span>
+                    <span class="step-number">CREATE</span>
+                </div>
+                <div class="step-badge">
+                    <span>🚀</span>
+                    <span class="step-number">CHASE</span>
+                </div>
+                <div class="step-badge">
+                    <span>🇬🇧</span>
+                    <span class="step-number">WITNESS</span>
+                </div>
+                <div class="step-badge">
+                    <span>👥</span>
+                    <span class="step-number">TOGETHER</span>
+                </div>
+            </div>
+
+            <button class="mission-button" onclick="startMission()">BEGIN MISSION →</button>
+        </div>
+
+        <!-- STAGE 2: SPACE JOURNEY -->
+        <div class="stage space-stage" id="stage2">
+            <div class="space-canvas" id="spaceCanvas">
+                <div class="journey-info">
+                    <div class="journey-title">🌌 FLY TO THE SUN</div>
+                    <div class="journey-text" id="journeyText">Starting above London, zooming out through Earth...</div>
+                    <div class="distance-display" id="distanceDisplay">Distance: 149,600,000 km</div>
+                </div>
+                <div class="control-hint">← Click or use arrow keys to navigate →</div>
+                <button class="next-button" onclick="nextStage()">NEXT →</button>
+            </div>
+        </div>
+
+        <!-- STAGE 3: OBSERVATORY -->
+        <div class="stage observatory-stage" id="stage3">
+            <div class="observatory-header">
+                <div class="observatory-title">🔭 SOLAR OBSERVATORY — LIVE DATA</div>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    LIVE
+                </div>
+            </div>
+            <div class="observatory-content">
+                <div class="sun-view" id="sunView">
+                    <div style="text-align: center; color: #ffeb3b;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">☀️</div>
+                        <div style="font-size: 12px;">Solar Observation Data</div>
+                        <div id="wavelengthDisplay" style="font-size: 14px; margin-top: 10px; color: #4da6ff;">171Å - Extreme UV</div>
+                    </div>
+                </div>
+                <div class="observatory-controls">
+                    <div class="control-section">
+                        <h3>📡 Wavelengths</h3>
+                        <button class="wavelength-button active" onclick="switchWavelength('171')">171Å</button>
+                        <button class="wavelength-button" onclick="switchWavelength('193')">193Å</button>
+                        <button class="wavelength-button" onclick="switchWavelength('304')">304Å</button>
+                    </div>
+                    <div class="control-section">
+                        <h3>🔍 Features Detected</h3>
+                        <div class="feature-badge">☀️ Sunspot Active</div>
+                        <div class="feature-badge">🔥 Active Region</div>
+                        <div class="feature-badge">🌋 Prominence</div>
+                    </div>
+                    <button class="capture-btn" onclick="captureObservation()">📸 CAPTURE</button>
+                    <button class="mission-button" style="width: 100%; margin-top: 10px; padding: 10px;" onclick="nextStage()">NEXT →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStage = 1;
+        const totalStages = 7;
+
+        function startMission() {
+            goToStage(2);
+        }
+
+        function nextStage() {
+            goToStage(currentStage + 1);
+        }
+
+        function goToStage(stageNum) {
+            document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+            const stage = document.getElementById(`stage${stageNum}`);
+            if (stage) {
+                stage.classList.add('active');
+                currentStage = stageNum;
+                onStageEnter(stageNum);
+            }
+        }
+
+        function onStageEnter(stage) {
+            switch(stage) {
+                case 2:
+                    startSpaceJourney();
+                    break;
+                case 3:
+                    initObservatory();
+                    break;
+            }
+        }
+
+        function startSpaceJourney() {
+            const journeyText = document.getElementById('journeyText');
+            const distanceDisplay = document.getElementById('distanceDisplay');
+            let zoom = 0;
+
+            const journeySteps = [
+                { text: 'Starting above London...', distance: '384 km' },
+                { text: 'Zooming out... Seeing the entire Earth', distance: '38,400 km' },
+                { text: 'The Moon comes into view...', distance: '384,400 km' },
+                { text: 'Racing towards the Sun...', distance: '50M km' },
+                { text: 'Approaching the Sun. Watch for solar features...', distance: '5M km' },
+                { text: '✨ Welcome to the Solar Observatory ✨', distance: 'Arriving...' }
+            ];
+
+            let step = 0;
+            const interval = setInterval(() => {
+                if (step < journeySteps.length) {
+                    journeyText.textContent = journeySteps[step].text;
+                    distanceDisplay.textContent = `Distance: ${journeySteps[step].distance}`;
+                    step++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 2000);
+        }
+
+        function initObservatory() {
+            console.log('Observatory initialized');
+        }
+
+        function switchWavelength(wavelength) {
+            document.querySelectorAll('.wavelength-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const wavelengthInfo = {
+                '171': '171Å - Extreme UV (Superheated plasma)',
+                '193': '193Å - Extreme UV (Active regions)',
+                '304': '304Å - Extreme UV (Chromosphere)'
+            };
+            
+            document.getElementById('wavelengthDisplay').textContent = wavelengthInfo[wavelength];
+        }
+
+        function captureObservation() {
+            alert('📸 Observation captured! Your eclipse memory has been saved.');
+        }
+    </script>
+</body>
+</html>
+
+        <!-- STAGE 4: BECOME THE MOON -->
+        <div class="stage" id="stage4" style="background: linear-gradient(135deg, #1a1a3e 0%, #0a0a2e 100%); flex-direction: column; align-items: center; justify-content: center; gap: 40px;">
+            <div style="text-align: center;">
+                <div style="font-size: 56px; margin-bottom: 20px;">🌑 BECOME THE MOON</div>
+                <div style="font-size: 20px; color: #aaa; margin-bottom: 40px;">Control the alignment to create the eclipse</div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 60px; font-size: 48px;">
+                <div>☀️</div>
+                <input type="range" id="moonSlider" min="0" max="100" value="0" style="width: 300px; height: 10px; cursor: pointer;">
+                <div>🌍</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 30px;">
+                <div style="text-align: center; background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 10px; border: 2px solid #ffeb3b;">
+                    <div style="font-size: 36px;">🌑</div>
+                    <div style="color: #ffeb3b; margin-top: 10px; font-size: 14px;">← MOVE THE MOON →</div>
+                    <div id="alignmentDisplay" style="font-size: 24px; margin-top: 15px; color: #4da6ff; font-weight: 700;">Alignment: 0%</div>
+                </div>
+                <div style="text-align: center; background: rgba(0, 0, 0, 0.5); padding: 20px; border-radius: 10px; border: 2px solid #333;">
+                    <div id="eclipseStatus" style="font-size: 20px; color: #888;">No eclipse yet</div>
+                    <div style="margin-top: 15px; color: #666; font-size: 12px;">Align the Moon with the Sun<br>to create a total eclipse</div>
+                </div>
+            </div>
+
+            <button class="mission-button" onclick="nextStage()">ECLIPSE CREATED! NEXT →</button>
+        </div>
+
+        <!-- STAGE 5: CHASE THE SHADOW -->
+        <div class="stage" id="stage5" style="background: radial-gradient(circle at center, #0a0a2e, #000); flex-direction: column; align-items: center; justify-content: center; gap: 30px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🚀 CHASE THE SHADOW</div>
+                <div style="font-size: 18px; color: #aaa;">Follow the Moon's shadow racing across Earth</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px;">
+                <div style="background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; border: 2px solid #ffeb3b;">
+                    <div style="font-size: 24px; color: #ffeb3b; margin-bottom: 20px; font-weight: 700;">🌍 SHADOW PATH</div>
+                    <div id="shadowPath" style="font-size: 14px; color: #ddd; line-height: 2.5;">
+                        <div>🌑 Greenland</div>
+                        <div style="margin-left: 20px; color: #4da6ff;">↓ 14 minutes</div>
+                        <div>🌑 Iceland (TOTALITY)</div>
+                        <div style="margin-left: 20px; color: #4da6ff;">↓ 18 minutes</div>
+                        <div>🌑 Atlantic Ocean</div>
+                        <div style="margin-left: 20px; color: #4da6ff;">↓ 22 minutes</div>
+                        <div>🌑 Spain (PARTIAL)</div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; border: 2px solid #4da6ff;">
+                    <div style="font-size: 24px; color: #4da6ff; margin-bottom: 20px; font-weight: 700;">📍 CURRENT POSITION</div>
+                    <div id="shadowPosition" style="font-size: 36px; margin: 20px 0;">🌑</div>
+                    <div style="font-size: 14px; color: #ddd;">Above Greenland</div>
+                    <div style="margin-top: 15px; font-size: 12px; color: #4da6ff;">Time to Next: <span id="timeToNext">02:14</span></div>
+                    <button class="mission-button" style="width: 100%; margin-top: 20px; padding: 10px;" onclick="nextStage()">FOLLOW COMPLETE →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAGE 6: RETURN TO LONDON -->
+        <div class="stage" id="stage6" style="background: linear-gradient(to bottom, #0a0a2e 0%, #1a0a00 100%); flex-direction: column; align-items: center; justify-content: center; gap: 30px;">
+            <div style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🇬🇧 RETURN TO LONDON</div>
+                <div style="font-size: 18px; color: #aaa; margin-bottom: 30px;">What you'll experience tomorrow</div>
+            </div>
+
+            <div style="background: rgba(0, 0, 0, 0.7); padding: 30px; border-radius: 15px; border: 2px solid #ff9800; max-width: 700px;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
+                    <div style="text-align: center; padding: 15px; background: rgba(255, 235, 59, 0.1); border-radius: 10px;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">☀️</div>
+                        <div style="font-size: 12px; color: #ffeb3b; font-weight: 700;">FIRST CONTACT</div>
+                        <div style="font-size: 11px; color: #aaa; margin-top: 5px;">09:20:06</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255, 235, 59, 0.1); border-radius: 10px;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">🌤️</div>
+                        <div style="font-size: 12px; color: #ffeb3b; font-weight: 700;">PARTIAL</div>
+                        <div style="font-size: 11px; color: #aaa; margin-top: 5px;">~5% Coverage</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255, 235, 59, 0.1); border-radius: 10px;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">🌡️</div>
+                        <div style="font-size: 12px; color: #ffeb3b; font-weight: 700;">TEMPERATURE</div>
+                        <div style="font-size: 11px; color: #aaa; margin-top: 5px;">Drops 2-5°C</div>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: rgba(255, 235, 59, 0.1); border-radius: 10px;">
+                        <div style="font-size: 32px; margin-bottom: 8px;">💡</div>
+                        <div style="font-size: 12px; color: #ffeb3b; font-weight: 700;">LIGHT</div>
+                        <div style="font-size: 11px; color: #aaa; margin-top: 5px;">Gets Dimmer</div>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <div style="font-size: 18px; color: #ffeb3b; margin-bottom: 15px; font-weight: 700;">📅 TODAY — August 12, 2026 — London Time (BST)</div>
+                    <div id="londonTimeline" style="font-size: 12px; color: #ddd; line-height: 2;">
+                        <div>🔴 18:17 — First Contact (partial eclipse begins)</div>
+                        <div>🔴 19:13 — Maximum (92.5% of Sun covered!)</div>
+                        <div>🔴 20:06 — Fourth Contact (eclipse ends)</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="mission-button" onclick="nextStage()">READY TO WITNESS →</button>
+        </div>
+
+        <!-- STAGE 7: EXPERIENCE TOGETHER -->
+        <div class="stage" id="stage7" style="background: radial-gradient(circle at center, #0a0a2e, #000); flex-direction: column; align-items: center; justify-content: center; gap: 30px;">
+            <div style="text-align: center;">
+                <div style="font-size: 56px; margin-bottom: 15px;">🌑 MAXIMUM ECLIPSE</div>
+                <div style="font-size: 20px; color: #aaa; margin-bottom: 40px;">247 colleagues experiencing this together</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px;">
+                <div style="background: rgba(0, 0, 0, 0.7); padding: 25px; border-radius: 15px; border: 2px solid #4da6ff; text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">🌍</div>
+                    <div style="font-size: 16px; color: #4da6ff; font-weight: 700; margin-bottom: 10px;">OUR SHADOW</div>
+                    <div style="font-size: 14px; color: #ddd;">Points on this map represent colleagues observing the eclipse from their locations</div>
+                    <div style="margin-top: 15px; font-size: 12px; color: #888;">🟡 London • 🟢 Iceland • 🔵 Spain • 🟠 Remote</div>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.7); padding: 25px; border-radius: 15px; border: 2px solid #ffeb3b;">
+                    <div style="font-size: 18px; color: #ffeb3b; font-weight: 700; margin-bottom: 15px;">📱 CONNECT YOUR PHONE</div>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <div style="display: inline-block; background: white; padding: 20px; border-radius: 10px; font-size: 40px;">QR</div>
+                    </div>
+                    <div style="font-size: 12px; color: #ddd;">Scan to turn your phone into an eclipse field instrument</div>
+                </div>
+            </div>
+
+            <button class="mission-button" onclick="finishMission()">MISSION COMPLETE ✓</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('moonSlider').addEventListener('input', function() {
+            const value = this.value;
+            document.getElementById('alignmentDisplay').textContent = `Alignment: ${value}%`;
+            
+            if (value > 90) {
+                document.getElementById('eclipseStatus').textContent = '✨ ECLIPSE! ✨';
+                document.getElementById('eclipseStatus').style.color = '#ffeb3b';
+            } else if (value > 70) {
+                document.getElementById('eclipseStatus').textContent = 'Almost there! Move closer...';
+                document.getElementById('eclipseStatus').style.color = '#ff9800';
+            } else {
+                document.getElementById('eclipseStatus').textContent = 'Keep adjusting...';
+                document.getElementById('eclipseStatus').style.color = '#888';
+            }
+        });
+
+        function finishMission() {
+            alert('🎉 MISSION COMPLETE!\n\nYou experienced the eclipse like an astronomer.\nTomorrow, August 12, 2026, you will witness the real event.\n\nStay safe and enjoy the spectacle!');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌑 Create Your Eclipse - Interactive Experience</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .stage {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .stage.active { display: flex; opacity: 1; }
+
+        /* STAGE 1: Become the Moon */
+        .become-moon {
+            background: radial-gradient(circle at center, #1a0a30, #000);
+        }
+
+        .moon-title {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(45deg, #e91e63, #9c27b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .alignment-huge {
+            font-size: 72px;
+            font-weight: 900;
+            color: #9c27b0;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+        }
+
+        .celestial-drag-area {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 900px;
+            position: relative;
+            padding: 50px 0;
+        }
+
+        .drag-line {
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, rgba(255, 235, 59, 0.3), transparent, rgba(77, 166, 255, 0.3));
+            top: 50%;
+            z-index: 0;
+        }
+
+        .celestial { font-size: 96px; z-index: 1; transition: all 0.3s ease; }
+        
+        .draggable-moon-big {
+            font-size: 96px;
+            cursor: grab;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.1s ease;
+            user-select: none;
+            filter: drop-shadow(0 0 20px rgba(156, 39, 176, 0.6));
+        }
+
+        .draggable-moon-big:active { cursor: grabbing; transform: scale(1.3); }
+
+        .hint { 
+            font-size: 18px;
+            color: #e91e63;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
+        }
+
+        /* STAGE 2: Eclipse Created */
+        .eclipse-celebration {
+            background: radial-gradient(circle at center, #0a0a2e, #000);
+        }
+
+        .celebration-content {
+            text-align: center;
+            animation: celebrate 0.8s ease;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .sparkles {
+            display: flex;
+            gap: 30px;
+            font-size: 64px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .sparkle {
+            animation: sparkleAnim 1s infinite ease-in-out;
+        }
+
+        .sparkle:nth-child(2) { animation-delay: 0.2s; }
+        .sparkle:nth-child(3) { animation-delay: 0.4s; }
+        .sparkle:nth-child(4) { animation-delay: 0.6s; }
+        .sparkle:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .eclipse-title {
+            font-size: 56px;
+            font-weight: 900;
+            color: #ffeb3b;
+            margin: 30px 0;
+            text-shadow: 0 0 30px rgba(255, 235, 59, 0.8);
+        }
+
+        .alignment-text {
+            font-size: 24px;
+            color: #ddd;
+            margin: 20px 0;
+            letter-spacing: 3px;
+        }
+
+        /* STAGE 3: Shadow Chase */
+        .shadow-chase {
+            background: radial-gradient(circle at center, #0a1a2e, #000);
+        }
+
+        .earth-big {
+            font-size: 200px;
+            position: relative;
+            margin-bottom: 40px;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .shadow-overlay {
+            position: absolute;
+            font-size: 80px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: moveShadow 5s ease-in-out infinite;
+        }
+
+        @keyframes moveShadow {
+            0%, 100% { transform: translate(-50%, -50%) translateX(-30px); }
+            50% { transform: translate(-50%, -50%) translateX(30px); }
+        }
+
+        .shadow-path {
+            font-size: 18px;
+            line-height: 2;
+            color: #4da6ff;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .shadow-speed {
+            font-size: 14px;
+            color: #ff9800;
+            margin: 10px 0;
+            font-weight: 700;
+        }
+
+        /* STAGE 4: Dive to London */
+        .dive-london {
+            background: linear-gradient(180deg, #000 0%, #1a1a3e 50%, #2e4a7c 100%);
+        }
+
+        .dive-animation {
+            text-align: center;
+            animation: zoomIn 3s ease;
+        }
+
+        @keyframes zoomIn {
+            0% { transform: scale(0.1); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .location-cascade {
+            font-size: 32px;
+            line-height: 2.5;
+            color: #4da6ff;
+        }
+
+        .location-item {
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .location-item:nth-child(1) { animation-delay: 0.3s; }
+        .location-item:nth-child(2) { animation-delay: 0.6s; }
+        .location-item:nth-child(3) { animation-delay: 0.9s; }
+        .location-item:nth-child(4) { animation-delay: 1.2s; }
+        .location-item:nth-child(5) { animation-delay: 1.5s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* STAGE 5: London Experience */
+        .london-experience {
+            background: linear-gradient(135deg, #1a0a00 0%, #2e1a00 100%);
+        }
+
+        .london-sky {
+            font-size: 120px;
+            margin-bottom: 30px;
+            filter: brightness(0.7);
+        }
+
+        .eclipse-timeline {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 40px 0;
+            max-width: 900px;
+        }
+
+        .timeline-card {
+            background: rgba(255, 107, 0, 0.2);
+            border: 2px solid #ff6f00;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .timeline-icon { font-size: 48px; margin-bottom: 15px; }
+        .timeline-time { font-size: 24px; color: #ffeb3b; font-weight: 700; margin: 10px 0; }
+        .timeline-desc { font-size: 14px; color: #ddd; }
+
+        /* Buttons */
+        .action-btn {
+            padding: 18px 40px;
+            background: linear-gradient(45deg, #e91e63, #9c27b0);
+            border: none;
+            color: white;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 30px rgba(156, 39, 176, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(156, 39, 176, 0.9);
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- STAGE 1: Become the Moon -->
+    <div class="stage become-moon active" id="stage1">
+        <div class="moon-title">🌑 YOU ARE THE MOON</div>
+        <p style="font-size: 20px; color: #ddd; margin-bottom: 20px;">Drag yourself to create the eclipse</p>
+        
+        <div class="alignment-huge" id="alignmentDisplay">0%</div>
+        
+        <div class="celestial-drag-area">
+            <div class="drag-line"></div>
+            <div class="celestial">☀️</div>
+            <div class="draggable-moon-big" id="moonDrag">🌑</div>
+            <div class="celestial">🌍</div>
+        </div>
+        
+        <div class="hint">← DRAG THE MOON →</div>
+    </div>
+
+    <!-- STAGE 2: Eclipse Created -->
+    <div class="stage eclipse-celebration" id="stage2">
+        <div class="celebration-content">
+            <div class="sparkles">
+                <span class="sparkle">✨</span>
+                <span class="sparkle">✨</span>
+                <span class="sparkle" style="font-size: 96px;">🌑</span>
+                <span class="sparkle">✨</span>
+                <span class="sparkle">✨</span>
+            </div>
+            <div class="eclipse-title">TOTAL ECLIPSE!</div>
+            <div class="alignment-text">☀️ ─── 🌑 ─── 🌍</div>
+            <p style="font-size: 18px; color: #ddd; margin: 30px 0;">You've created perfect alignment</p>
+            <button class="action-btn" onclick="goToStage(3)">🚀 FOLLOW MY SHADOW</button>
+        </div>
+    </div>
+
+    <!-- STAGE 3: Shadow Chase -->
+    <div class="stage shadow-chase" id="stage3">
+        <div style="text-align: center;">
+            <h2 style="font-size: 42px; color: #4da6ff; margin-bottom: 30px;">YOUR SHADOW RACING ACROSS EARTH</h2>
+            <div style="position: relative; display: inline-block;">
+                <div class="earth-big">🌍</div>
+                <div class="shadow-overlay">🌑</div>
+            </div>
+            <div class="shadow-path">
+                <div>🌑 Greenland</div>
+                <div>↓</div>
+                <div>🌑 Iceland (Totality)</div>
+                <div>↓</div>
+                <div>🌑 Atlantic Ocean</div>
+                <div>↓</div>
+                <div>🌑 Spain</div>
+            </div>
+            <div class="shadow-speed">⚡ Speed: 2,000 km/h</div>
+            <button class="action-btn" onclick="goToStage(4)">📍 TAKE ME TO LONDON</button>
+        </div>
+    </div>
+
+    <!-- STAGE 4: Dive to London -->
+    <div class="stage dive-london" id="stage4">
+        <div class="dive-animation">
+            <h2 style="font-size: 48px; color: #ffeb3b; margin-bottom: 40px;">DIVING TO LONDON...</h2>
+            <div class="location-cascade">
+                <div class="location-item">🌌 Space</div>
+                <div class="location-item">↓</div>
+                <div class="location-item">🌍 Europe</div>
+                <div class="location-item">↓</div>
+                <div class="location-item">🇬🇧 United Kingdom</div>
+                <div class="location-item">↓</div>
+                <div class="location-item">📍 London</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STAGE 5: London Experience -->
+    <div class="stage london-experience" id="stage5">
+        <div style="text-align: center; max-width: 1000px;">
+            <div class="london-sky">🌤️</div>
+            <h2 style="font-size: 42px; color: #ffeb3b; margin-bottom: 20px;">THIS IS WHAT YOU'LL SEE IN LONDON</h2>
+            <p style="font-size: 18px; color: #ddd; margin-bottom: 40px;">🔴 HAPPENING TODAY — August 12, 2026</p>
+            
+            <div class="eclipse-timeline">
+                <div class="timeline-card">
+                    <div class="timeline-icon">☀️</div>
+                    <div class="timeline-time">18:17 BST</div>
+                    <div class="timeline-desc">First Contact<br>Eclipse Begins</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-icon">🌘</div>
+                    <div class="timeline-time">19:13 BST</div>
+                    <div class="timeline-desc">Maximum<br>92.5% Coverage!</div>
+                </div>
+                <div class="timeline-card">
+                    <div class="timeline-icon">💡</div>
+                    <div class="timeline-time">20:06 BST</div>
+                    <div class="timeline-desc">Fourth Contact<br>Eclipse Ends</div>
+                </div>
+            </div>
+
+            <button class="action-btn restart-btn" onclick="restart()">🔄 CREATE ANOTHER ECLIPSE</button>
+        </div>
+    </div>
+
+    <script>
+        const moonDrag = document.getElementById('moonDrag');
+        const alignmentDisplay = document.getElementById('alignmentDisplay');
+        let isDragging = false;
+        let startX = 0;
+        let currentAlignment = 0;
+
+        moonDrag.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - startX;
+            currentAlignment = Math.max(0, Math.min(100, currentAlignment + deltaX / 5));
+            
+            alignmentDisplay.textContent = `${Math.round(currentAlignment)}%`;
+            moonDrag.style.transform = `translateX(${(currentAlignment - 50) * 4}px)`;
+            
+            if (currentAlignment > 95) {
+                alignmentDisplay.style.color = '#4CAF50';
+            } else if (currentAlignment > 80) {
+                alignmentDisplay.style.color = '#ff9800';
+            } else {
+                alignmentDisplay.style.color = '#9c27b0';
+            }
+            
+            startX = e.clientX;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging && currentAlignment > 95) {
+                setTimeout(() => goToStage(2), 500);
+            }
+            isDragging = false;
+        });
+
+        // Touch support
+        moonDrag.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.touches[0].clientX - startX;
+            currentAlignment = Math.max(0, Math.min(100, currentAlignment + deltaX / 5));
+            
+            alignmentDisplay.textContent = `${Math.round(currentAlignment)}%`;
+            moonDrag.style.transform = `translateX(${(currentAlignment - 50) * 4}px)`;
+            
+            if (currentAlignment > 95) alignmentDisplay.style.color = '#4CAF50';
+            else if (currentAlignment > 80) alignmentDisplay.style.color = '#ff9800';
+            else alignmentDisplay.style.color = '#9c27b0';
+            
+            startX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', () => {
+            if (isDragging && currentAlignment > 95) {
+                setTimeout(() => goToStage(2), 500);
+            }
+            isDragging = false;
+        });
+
+        function goToStage(num) {
+            document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+            document.getElementById(`stage${num}`).classList.add('active');
+            
+            if (num === 4) {
+                setTimeout(() => goToStage(5), 3000);
+            }
+        }
+
+        function restart() {
+            currentAlignment = 0;
+            alignmentDisplay.textContent = '0%';
+            alignmentDisplay.style.color = '#9c27b0';
+            moonDrag.style.transform = 'translateX(0)';
+            goToStage(1);
+        }
+    </script>
+</body>
+</html>
