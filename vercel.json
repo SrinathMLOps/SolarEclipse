@@ -1,9 +1,5 @@
 {
-  "routes": [
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/experience", "dest": "/experience.html" },
-    { "src": "/complete", "dest": "/complete.html" },
-    { "src": "/unique", "dest": "/unique.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/$1" }
   ]
 }
