@@ -5,12 +5,11 @@
   "main": "index.html",
   "scripts": {
     "dev": "serve .",
-    "build": "echo 'Build complete'",
-    "start": "serve ."
+    "build": "echo 'Static files ready'",
+    "start": "serve .",
+    "vercel-build": "echo 'Build complete - static files'"
   },
-  "dependencies": {
-    "serve": "^14.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "repository": {
     "type": "git",
@@ -18,5 +17,6 @@
   },
   "keywords": ["solar", "eclipse", "astronomy", "interactive", "nasa"],
   "author": "SrinathMLOps",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/SrinathMLOps/SolarEclipse#readme"
 }
