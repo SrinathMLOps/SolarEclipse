@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "app.js": {
-      "runtime": "@vercel/static"
-    }
-  },
   "routes": [
     { "src": "/", "dest": "/index.html" },
     { "src": "/experience", "dest": "/experience.html" },
