@@ -1,18 +1,22 @@
 {
-  "name": "eclipse-viewer",
+  "name": "solar-eclipse-viewer",
   "version": "1.0.0",
-  "description": "Virtual Telescope Solar Eclipse Viewer",
-  "type": "module",
+  "description": "Interactive Solar Eclipse Experience - August 12, 2026",
+  "main": "index.html",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "serve .",
+    "build": "echo 'Build complete'",
+    "start": "serve ."
   },
   "dependencies": {
-    "three": "^r128",
-    "gsap": "^3.12.2"
+    "serve": "^14.0.0"
   },
-  "devDependencies": {
-    "vite": "^5.0.0"
-  }
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SrinathMLOps/SolarEclipse.git"
+  },
+  "keywords": ["solar", "eclipse", "astronomy", "interactive", "nasa"],
+  "author": "SrinathMLOps",
+  "license": "MIT"
 }
