@@ -259,7 +259,7 @@
             width: 150px;
             height: 150px;
             background: radial-gradient(circle at 35% 35%, #ffeb3b, #ff9800, #ff6f00);
-            box-shadow: 0 0 50px #ffeb3b, 0 0 80px rgba(255, 235, 59, 0.4);
+            box-shadow: 0 0 60px #ffeb3b, 0 0 100px rgba(255, 235, 59, 0.5);
             z-index: 1;
             position: relative;
         }
@@ -288,8 +288,8 @@
         .moon {
             width: 150px;
             height: 150px;
-            background: radial-gradient(circle at 25% 25%, #e0e0e0, #a0a0a0, #404040);
-            box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 0, 0, 0.3);
+            background: radial-gradient(circle at 25% 25%, #f0f0f0, #c0c0c0, #808080);
+            box-shadow: inset -2px -2px 6px rgba(0, 0, 0, 0.4), 0 0 20px rgba(200, 200, 200, 0.4);
             z-index: 2;
             position: relative;
         }
@@ -310,8 +310,8 @@
         .umbra {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.7);
+            background: radial-gradient(circle at 35% 35%, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.6));
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.9);
             z-index: 3;
             pointer-events: none;
         }
@@ -365,10 +365,10 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #4da6ff, #0066cc, #001a4d);
-            box-shadow: 0 0 15px rgba(77, 166, 255, 0.4), inset -2px -2px 4px rgba(0, 0, 0, 0.3);
+            background: radial-gradient(circle at 30% 30%, #66b3ff, #3399ff, #0066cc);
+            box-shadow: 0 0 25px rgba(77, 166, 255, 0.8), 0 0 40px rgba(77, 166, 255, 0.4), inset -2px -2px 4px rgba(0, 0, 0, 0.2);
             z-index: 0;
-            opacity: 0.9;
+            opacity: 1;
             bottom: 20px;
             left: 20px;
         }
@@ -379,10 +379,10 @@
             height: 100%;
             border-radius: 50%;
             background-image: 
-                radial-gradient(circle 6px at 25% 35%, #22aa22, transparent 40%),
-                radial-gradient(circle 4px at 45% 50%, #228822, transparent 40%),
-                radial-gradient(circle 5px at 70% 25%, #1a8822, transparent 40%),
-                radial-gradient(circle 3px at 60% 60%, #2a9a2a, transparent 40%);
+                radial-gradient(circle 6px at 25% 35%, #33cc33, transparent 40%),
+                radial-gradient(circle 4px at 45% 50%, #2eb82e, transparent 40%),
+                radial-gradient(circle 5px at 70% 25%, #29a329, transparent 40%),
+                radial-gradient(circle 3px at 60% 60%, #3ad63a, transparent 40%);
             z-index: 1;
         }
 
@@ -391,10 +391,57 @@
             bottom: 5px;
             left: 5px;
             font-size: 9px;
-            color: #4da6ff;
+            color: #66b3ff;
             font-weight: 600;
             z-index: 2;
-            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(102, 179, 255, 0.6);
+        }
+
+        .celestial-label {
+            position: absolute;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 10;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 3px;
+            border: 1px solid;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            pointer-events: none;
+        }
+
+        .sun-label {
+            color: #ffeb3b;
+            border-color: #ffeb3b;
+            text-shadow: 0 0 8px rgba(255, 235, 59, 0.8);
+            top: 15%;
+            left: 15%;
+        }
+
+        .moon-label {
+            color: #e0e0e0;
+            border-color: #e0e0e0;
+            text-shadow: 0 0 8px rgba(224, 224, 224, 0.8);
+            top: 15%;
+            right: 15%;
+        }
+
+        .umbra-label {
+            color: #ff6f00;
+            border-color: #ff6f00;
+            text-shadow: 0 0 8px rgba(255, 111, 0, 0.8);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .corona-label {
+            color: #ffeb3b;
+            border-color: #ffeb3b;
+            text-shadow: 0 0 8px rgba(255, 235, 59, 0.8);
+            top: 35%;
+            left: 35%;
         }
 
         /* Orbital path indicators */
@@ -679,6 +726,11 @@
                     <!-- Distance labels -->
                     <div class="sun-distance-label">☀️ 149.6M km</div>
                     <div class="moon-distance-label">🌑 384,400 km</div>
+
+                    <!-- Celestial Body Labels -->
+                    <div class="celestial-label sun-label">☀️ SUN</div>
+                    <div class="celestial-label moon-label">🌑 MOON</div>
+                    <div class="celestial-label umbra-label">⚫ UMBRA</div>
 
                     <!-- Orbital paths (for context) -->
                     <div style="position: absolute; width: 280px; height: 280px; border: 1px dashed rgba(255, 235, 59, 0.1); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
