@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -108,28 +108,6 @@
             background: linear-gradient(135deg, rgba(50, 30, 80, 0.6), rgba(30, 20, 60, 0.8));
             border: 2px solid #9c27b0;
             position: relative;
-        }
-
-        .wavelength-btn {
-            padding: 6px 12px;
-            background: rgba(255, 235, 59, 0.2);
-            border: 1px solid #ffeb3b;
-            color: #ffeb3b;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .wavelength-btn:hover {
-            background: rgba(255, 235, 59, 0.4);
-            box-shadow: 0 0 10px rgba(255, 235, 59, 0.4);
-        }
-
-        .wavelength-btn.active {
-            background: #ffeb3b;
-            color: #000;
         }
 
         .moon-control-area {
@@ -742,8 +720,8 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <div>
                         <span style="color: #ffeb3b;">☀️ Sun:</span> 1.39M km dia<br>
-                        <span style="color: #ffeb3b;">� Earth:</span> 12,742 km dia<br>
-                        <span style="color: #ffeb3b;">�🌑 Moon:</span> 3,474 km dia
+                        <span style="color: #ffeb3b;">ï¿½ Earth:</span> 12,742 km dia<br>
+                        <span style="color: #ffeb3b;">ï¿½🌑 Moon:</span> 3,474 km dia
                     </div>
                     <div>
                         <span style="color: #ffeb3b;">☀️-🌍:</span> 149.6M km<br>
@@ -752,7 +730,7 @@
                     </div>
                 </div>
                 <div style="margin-top: 8px; border-top: 1px solid rgba(255, 235, 59, 0.3); padding-top: 8px;">
-                    <strong style="color: #ffeb3b;">📐 Shadow Geometry:</strong><br>
+                    <strong style="color: #ffeb3b;">🔐 Shadow Geometry:</strong><br>
                     <span id="shadowInfo">Umbra: calculating... | Penumbra: calculating...</span><br>
                     <strong style="color: #4da6ff; margin-top: 6px; display: block;">🌍 Earth Position: Aligned in Sun-Moon axis</strong>
                 </div>
@@ -870,67 +848,6 @@
             </div>
         </div>
 
-        <!-- THIRD COLUMN - NASA LIVE SOLAR OBSERVATORY -->
-        <div class="view-card" style="background: linear-gradient(135deg, rgba(50, 30, 20, 0.6), rgba(30, 20, 10, 0.8)); border: 2px solid #ff6f00;">
-            <div class="view-title" style="color: #ff6f00;">🔭 NASA Solar Observatory — Live View</div>
-            
-            <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="wavelength-btn active" onclick="switchStream('nasa')">NASA TV</button>
-                    <button class="wavelength-btn" onclick="switchStream('sdo')">SDO Live</button>
-                    <button class="wavelength-btn" onclick="switchStream('iss')">ISS Live</button>
-                    <button class="wavelength-btn" onclick="switchStream('space')">SpaceX</button>
-                </div>
-
-                <div style="flex: 1; background: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                    <!-- NASA TV Live Stream (Always works) -->
-                    <iframe id="nasaLiveStream" 
-                            width="100%" 
-                            height="100%" 
-                            src="https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1&mute=0&controls=1" 
-                            frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            allowfullscreen
-                            style="border-radius: 10px; min-height: 350px;">
-                    </iframe>
-                    
-                    <div style="position: absolute; top: 10px; right: 10px; background: rgba(255, 0, 0, 0.9); padding: 5px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; z-index: 10;">
-                        <div style="width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse 1s infinite;"></div>
-                        LIVE
-                    </div>
-                    
-                    <div id="nasaFallback" style="display: none; flex-direction: column; align-items: center; gap: 15px; position: absolute;">
-                        <div style="font-size: 64px;">☀️</div>
-                        <div style="font-size: 14px; color: #ff6f00;">NASA TV Live</div>
-                        <div style="font-size: 12px; color: #888;">Loading stream...</div>
-                    </div>
-                </div>
-
-                <div style="background: rgba(0, 0, 0, 0.5); padding: 12px; border-radius: 5px;">
-                    <div style="font-size: 11px; color: #ff6f00; font-weight: 700; margin-bottom: 8px;">📡 LIVE STREAM (24/7)</div>
-                    <div id="wavelengthInfo" style="font-size: 11px; color: #ddd; line-height: 1.6;">
-                        <strong>NASA TV</strong> — Official Channel<br>
-                        Live coverage of space events & missions
-                    </div>
-                </div>
-
-                <div style="background: rgba(255, 107, 0, 0.2); padding: 10px; border-radius: 5px; border-left: 3px solid #ff6f00;">
-                    <div style="font-size: 10px; color: #ffb74d; line-height: 1.6;">
-                        <strong>🔬 Features Visible:</strong><br>
-                        • Active regions & sunspots<br>
-                        • Solar flares & prominences<br>
-                        • Coronal mass ejections<br>
-                        • Magnetic field structures
-                    </div>
-                </div>
-
-                <button class="btn" style="width: 100%;" onclick="toggleFullscreen()">⛶ Fullscreen</button>
-                <a href="unique.html" style="text-decoration: none;">
-                    <button class="mission-button" style="width: 100%; padding: 10px;">🌑 CREATE ECLIPSE</button>
-                </a>
-            </div>
-        </div>
-    </div>
 
     <script type="module">
         // Solar Eclipse Viewer - Astronomer Level Scientific Visualization
@@ -1232,48 +1149,6 @@
         updateLocationTimes();
         animate();
 
-        // NASA Live Streaming Functions
-        const liveStreams = {
-            'nasa': {
-                url: 'https://www.youtube.com/embed/21X5lGlDOfg?autoplay=1&mute=0&controls=1',
-                info: '<strong>NASA TV</strong> — Official Channel<br>Live coverage of space events & missions'
-            },
-            'sdo': {
-                url: 'https://www.youtube.com/embed/gsBlLyEP97w?autoplay=1&mute=0&controls=1',
-                info: '<strong>Solar Dynamics Observatory</strong><br>Live views of the Sun in multiple wavelengths'
-            },
-            'iss': {
-                url: 'https://www.youtube.com/embed/P9C25Un7xaM?autoplay=1&mute=0&controls=1',
-                info: '<strong>ISS Live Feed</strong><br>View Earth from International Space Station'
-            },
-            'space': {
-                url: 'https://www.youtube.com/embed/s86-Z-CbaHA?autoplay=1&mute=0&controls=1',
-                info: '<strong>SpaceX Live</strong><br>Live coverage of SpaceX missions'
-            }
-        };
-
-        function switchStream(stream) {
-            document.querySelectorAll('.wavelength-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const data = liveStreams[stream];
-            const iframe = document.getElementById('nasaLiveStream');
-            const info = document.getElementById('wavelengthInfo');
-            
-            iframe.src = data.url;
-            info.innerHTML = data.info;
-        }
-
-        function toggleFullscreen() {
-            const iframe = document.getElementById('nasaLiveStream');
-            if (iframe.requestFullscreen) {
-                iframe.requestFullscreen();
-            } else if (iframe.webkitRequestFullscreen) {
-                iframe.webkitRequestFullscreen();
-            } else if (iframe.msRequestFullscreen) {
-                iframe.msRequestFullscreen();
-            }
-        }
     </script>
 </body>
 </html>
