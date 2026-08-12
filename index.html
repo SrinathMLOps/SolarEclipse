@@ -499,15 +499,12 @@
         }
 
         .celestial-legend {
-            position: absolute;
-            right: -280px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.85);
-            border: 2px solid #333;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffeb3b;
             border-radius: 8px;
             padding: 20px;
-            min-width: 250px;
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.3);
         }
 
         .legend-title {
@@ -840,7 +837,8 @@
         <div class="view-card">
             <div class="view-title">🔭 Iceland — Path of Totality</div>
             <div class="view-content">
-                <div class="telescope-circle">
+                <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                    <div class="telescope-circle">
                     <!-- Distance labels -->
                     <div class="sun-distance-label">☀️ 149.6M km</div>
                     <div class="moon-distance-label">🌑 384,400 km</div>
@@ -854,27 +852,6 @@
                     
                     <div class="label-pointer umbra-pointer"></div>
                     <div class="celestial-label umbra-label">⚫ UMBRA (Dark Shadow)</div>
-
-                    <!-- Legend Box -->
-                    <div class="celestial-legend">
-                        <div class="legend-title">Celestial Bodies</div>
-                        <div class="legend-item legend-item-sun">
-                            <span class="legend-icon">☀️</span>
-                            <span>SUN</span>
-                        </div>
-                        <div class="legend-item legend-item-moon">
-                            <span class="legend-icon">🌑</span>
-                            <span>MOON</span>
-                        </div>
-                        <div class="legend-item legend-item-umbra">
-                            <span class="legend-icon">⚫</span>
-                            <span>UMBRA</span>
-                        </div>
-                        <div class="legend-item legend-item-earth">
-                            <span class="legend-icon">🌍</span>
-                            <span>EARTH</span>
-                        </div>
-                    </div>
 
                     <!-- Orbital paths (for context) -->
                     <div style="position: absolute; width: 280px; height: 280px; border: 1px dashed rgba(255, 235, 59, 0.1); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
@@ -908,6 +885,28 @@
 
                     <div class="info-overlay" id="phaseLabel">First Contact</div>
                 </div>
+
+                <!-- Legend Box -->
+                <div class="celestial-legend">
+                    <div class="legend-title">Celestial Bodies</div>
+                    <div class="legend-item legend-item-sun">
+                        <span class="legend-icon">☀️</span>
+                        <span>SUN</span>
+                    </div>
+                    <div class="legend-item legend-item-moon">
+                        <span class="legend-icon">🌑</span>
+                        <span>MOON</span>
+                    </div>
+                    <div class="legend-item legend-item-umbra">
+                        <span class="legend-icon">⚫</span>
+                        <span>UMBRA</span>
+                    </div>
+                    <div class="legend-item legend-item-earth">
+                        <span class="legend-icon">🌍</span>
+                        <span>EARTH</span>
+                    </div>
+                </div>
+            </div>
             </div>
 
             <!-- Scientific Info Panel -->
