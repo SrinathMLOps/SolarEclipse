@@ -498,6 +498,70 @@
             left: 35%;
         }
 
+        .celestial-legend {
+            position: absolute;
+            right: -280px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 250px;
+        }
+
+        .legend-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffeb3b;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .legend-item-sun {
+            color: #ffeb3b;
+            background: rgba(255, 235, 59, 0.1);
+            border-left: 4px solid #ffeb3b;
+        }
+
+        .legend-item-moon {
+            color: #e0e0e0;
+            background: rgba(224, 224, 224, 0.1);
+            border-left: 4px solid #e0e0e0;
+        }
+
+        .legend-item-umbra {
+            color: #ff6f00;
+            background: rgba(255, 111, 0, 0.1);
+            border-left: 4px solid #ff6f00;
+        }
+
+        .legend-item-earth {
+            color: #66b3ff;
+            background: rgba(102, 179, 255, 0.1);
+            border-left: 4px solid #66b3ff;
+        }
+
+        .legend-icon {
+            font-size: 20px;
+        }
+
         /* Orbital path indicators */
         .orbital-line {
             position: absolute;
@@ -790,6 +854,27 @@
                     
                     <div class="label-pointer umbra-pointer"></div>
                     <div class="celestial-label umbra-label">⚫ UMBRA (Dark Shadow)</div>
+
+                    <!-- Legend Box -->
+                    <div class="celestial-legend">
+                        <div class="legend-title">Celestial Bodies</div>
+                        <div class="legend-item legend-item-sun">
+                            <span class="legend-icon">☀️</span>
+                            <span>SUN</span>
+                        </div>
+                        <div class="legend-item legend-item-moon">
+                            <span class="legend-icon">🌑</span>
+                            <span>MOON</span>
+                        </div>
+                        <div class="legend-item legend-item-umbra">
+                            <span class="legend-icon">⚫</span>
+                            <span>UMBRA</span>
+                        </div>
+                        <div class="legend-item legend-item-earth">
+                            <span class="legend-icon">🌍</span>
+                            <span>EARTH</span>
+                        </div>
+                    </div>
 
                     <!-- Orbital paths (for context) -->
                     <div style="position: absolute; width: 280px; height: 280px; border: 1px dashed rgba(255, 235, 59, 0.1); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
