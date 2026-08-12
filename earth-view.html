@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earth View - Solar Eclipse Shadow Path</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to bottom, rgba(20, 20, 30, 0.9), rgba(10, 10, 10, 0.8));
+            padding: 20px 30px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffeb3b;
+            letter-spacing: 1px;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background: rgba(255, 235, 59, 0.2);
+            border: 1px solid #ffeb3b;
+            color: #ffeb3b;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #ffeb3b;
+            color: #000;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 40px;
+        }
+
+        .earth-viewer {
+            width: 100%;
+            max-width: 1200px;
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.6), rgba(20, 20, 40, 0.8));
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        .view-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffeb3b;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .earth-3d-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .earth-sphere-wrapper {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+
+        .earth-sphere {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #4da6ff, #2d7fd9, #0066cc, #004080);
+            box-shadow: 
+                inset -40px -40px 80px rgba(0, 0, 0, 0.7),
+                0 0 60px rgba(77, 166, 255, 0.5),
+                0 0 100px rgba(77, 166, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: rotateEarth 60s linear infinite;
+        }
+
+        @keyframes rotateEarth {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .earth-continents {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                /* North America */
+                radial-gradient(ellipse 60px 80px at 25% 30%, #2d8f2d, transparent 70%),
+                radial-gradient(ellipse 50px 60px at 30% 40%, #267326, transparent 65%),
+                /* South America */
+                radial-gradient(ellipse 40px 70px at 32% 55%, #2d8f2d, transparent 70%),
+                /* Europe */
+                radial-gradient(ellipse 45px 40px at 52% 28%, #1f6b1f, transparent 70%),
+                /* Africa */
+                radial-gradient(ellipse 55px 75px at 54% 48%, #267326, transparent 70%),
+                /* Asia */
+                radial-gradient(ellipse 80px 70px at 70% 32%, #2d8f2d, transparent 70%),
+                /* Australia */
+                radial-gradient(ellipse 35px 40px at 78% 62%, #1f6b1f, transparent 70%);
+            opacity: 0.9;
+        }
+
+        .day-night-terminator {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(to right,
+                transparent 0%,
+                transparent 45%,
+                rgba(0, 0, 0, 0.2) 48%,
+                rgba(0, 0, 0, 0.6) 50%,
+                rgba(0, 0, 0, 0.85) 52%,
+                rgba(0, 0, 0, 0.95) 55%,
+                rgba(0, 0, 0, 1) 100%);
+            left: -50%;
+            animation: dayNightCycle 60s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes dayNightCycle {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(50%); }
+        }
+
+        .eclipse-shadow {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                rgba(0, 0, 0, 0.95) 0%,
+                rgba(0, 0, 0, 0.85) 30%,
+                rgba(0, 0, 0, 0.5) 60%,
+                transparent 100%);
+            top: 35%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            animation: eclipseShadowMove 20s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+            z-index: 10;
+        }
+
+        @keyframes eclipseShadowMove {
+            0% { left: 30%; top: 32%; }
+            25% { left: 45%; top: 35%; }
+            50% { left: 60%; top: 32%; }
+            75% { left: 45%; top: 35%; }
+            100% { left: 30%; top: 32%; }
+        }
+
+        .sun-indicator {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffeb3b, #ff9800);
+            right: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 60px #ffeb3b, 0 0 100px rgba(255, 235, 59, 0.4);
+        }
+
+        .moon-indicator {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #e0e0e0, #a0a0a0);
+            left: -80px;
+            top: 45%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: moonOrbit 20s ease-in-out infinite;
+        }
+
+        @keyframes moonOrbit {
+            0%, 100% { left: -80px; top: 45%; }
+            50% { left: -60px; top: 40%; }
+        }
+
+        .alignment-indicator {
+            position: absolute;
+            width: 600px;
+            height: 2px;
+            background: linear-gradient(to right,
+                #ffeb3b,
+                transparent 25%,
+                transparent 75%,
+                #e0e0e0);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .info-panel {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #ffeb3b;
+            border-radius: 8px;
+            padding: 25px;
+            max-width: 400px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffeb3b;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 235, 59, 0.05);
+            border-left: 3px solid #ffeb3b;
+            border-radius: 4px;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">🌍 Earth View - Eclipse Shadow Path</div>
+        <a href="index.html" class="back-btn">← Back to Main View</a>
+    </div>
+
+    <div class="main-container">
+        <div class="earth-viewer">
+            <div class="view-title">🌍 Earth Rotation & Eclipse Shadow Path</div>
+            
+            <div class="earth-3d-container">
+                <div class="earth-sphere-wrapper">
+                    <div class="alignment-indicator"></div>
+                    <div class="sun-indicator"></div>
+                    <div class="moon-indicator"></div>
+                    
+                    <div class="earth-sphere">
+                        <div class="earth-continents"></div>
+                        <div class="day-night-terminator"></div>
+                        <div class="eclipse-shadow"></div>
+                    </div>
+                </div>
+
+                <div class="info-panel">
+                    <div class="info-title">Eclipse Shadow Information</div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Shadow Type</div>
+                        <div class="info-value">Umbra (Total Eclipse)</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Shadow Speed</div>
+                        <div class="info-value">~2,500 km/h</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Path Width</div>
+                        <div class="info-value">~200-270 km</div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-label">Duration at Location</div>
+                        <div class="info-value">1-2 minutes totality</div>
+                    </div>
+
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ffeb3b; box-shadow: 0 0 10px #ffeb3b;"></div>
+                            <span>Sun</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #e0e0e0;"></div>
+                            <span>Moon</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4da6ff;"></div>
+                            <span>Earth (Day)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #001a33;"></div>
+                            <span>Earth (Night)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(0,0,0,0.9);"></div>
+                            <span>Eclipse Shadow</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #2d8f2d;"></div>
+                            <span>Land</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; padding: 20px; background: rgba(255, 235, 59, 0.1); border-left: 3px solid #ffeb3b; border-radius: 4px;">
+                <strong style="color: #ffeb3b; font-size: 14px;">📍 Eclipse Path:</strong>
+                <p style="margin-top: 10px; line-height: 1.8; color: #ddd; font-size: 13px;">
+                    The dark shadow (umbra) moves from west to east across the Atlantic Ocean, passing over Iceland and parts of Spain. 
+                    The animation shows how Earth's rotation and the Moon's orbit combine to create the eclipse shadow path. 
+                    Locations within the shadow experience totality, while surrounding areas see a partial eclipse.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
