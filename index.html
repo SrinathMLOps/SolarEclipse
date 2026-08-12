@@ -399,95 +399,41 @@
 
         .celestial-label {
             position: absolute;
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 700;
             z-index: 10;
-            padding: 8px 16px;
-            background: rgba(0, 0, 0, 0.85);
-            border-radius: 6px;
-            border: 2px solid;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 3px;
+            border: 1px solid;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             pointer-events: none;
-            white-space: nowrap;
         }
 
         .sun-label {
             color: #ffeb3b;
             border-color: #ffeb3b;
-            text-shadow: 0 0 10px rgba(255, 235, 59, 0.8);
-            top: 25%;
-            left: -180px;
+            text-shadow: 0 0 8px rgba(255, 235, 59, 0.8);
+            top: 15%;
+            left: 15%;
         }
 
         .moon-label {
             color: #e0e0e0;
             border-color: #e0e0e0;
-            text-shadow: 0 0 10px rgba(224, 224, 224, 0.8);
-            top: 25%;
-            right: -180px;
+            text-shadow: 0 0 8px rgba(224, 224, 224, 0.8);
+            top: 15%;
+            right: 15%;
         }
 
         .umbra-label {
             color: #ff6f00;
             border-color: #ff6f00;
-            text-shadow: 0 0 10px rgba(255, 111, 0, 0.8);
+            text-shadow: 0 0 8px rgba(255, 111, 0, 0.8);
             top: 50%;
-            right: -230px;
-            transform: translateY(-50%);
-        }
-
-        .earth-label-main {
-            position: absolute;
-            bottom: 10%;
-            left: -180px;
-            font-size: 14px;
-            font-weight: 700;
-            color: #66b3ff;
-            padding: 8px 16px;
-            background: rgba(0, 0, 0, 0.85);
-            border-radius: 6px;
-            border: 2px solid #66b3ff;
-            text-shadow: 0 0 10px rgba(102, 179, 255, 0.8);
-            z-index: 10;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .label-pointer {
-            position: absolute;
-            height: 2px;
-            background: currentColor;
-            z-index: 9;
-            opacity: 0.6;
-        }
-
-        .sun-pointer {
-            color: #ffeb3b;
-            width: 70px;
-            top: calc(25% + 20px);
-            left: -110px;
-        }
-
-        .moon-pointer {
-            color: #e0e0e0;
-            width: 70px;
-            top: calc(25% + 20px);
-            right: -110px;
-        }
-
-        .umbra-pointer {
-            color: #ff6f00;
-            width: 80px;
-            top: 50%;
-            right: -150px;
-        }
-
-        .earth-pointer {
-            color: #66b3ff;
-            width: 60px;
-            bottom: calc(10% + 20px);
-            left: -120px;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .corona-label {
@@ -496,67 +442,6 @@
             text-shadow: 0 0 8px rgba(255, 235, 59, 0.8);
             top: 35%;
             left: 35%;
-        }
-
-        .celestial-legend {
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #ffeb3b;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(255, 235, 59, 0.3);
-        }
-
-        .legend-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffeb3b;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .legend-item-sun {
-            color: #ffeb3b;
-            background: rgba(255, 235, 59, 0.1);
-            border-left: 4px solid #ffeb3b;
-        }
-
-        .legend-item-moon {
-            color: #e0e0e0;
-            background: rgba(224, 224, 224, 0.1);
-            border-left: 4px solid #e0e0e0;
-        }
-
-        .legend-item-umbra {
-            color: #ff6f00;
-            background: rgba(255, 111, 0, 0.1);
-            border-left: 4px solid #ff6f00;
-        }
-
-        .legend-item-earth {
-            color: #66b3ff;
-            background: rgba(102, 179, 255, 0.1);
-            border-left: 4px solid #66b3ff;
-        }
-
-        .legend-icon {
-            font-size: 20px;
         }
 
         /* Orbital path indicators */
@@ -837,21 +722,15 @@
         <div class="view-card">
             <div class="view-title">🔭 Iceland — Path of Totality</div>
             <div class="view-content">
-                <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                    <div class="telescope-circle">
+                <div class="telescope-circle">
                     <!-- Distance labels -->
                     <div class="sun-distance-label">☀️ 149.6M km</div>
                     <div class="moon-distance-label">🌑 384,400 km</div>
 
-                    <!-- Celestial Body Labels - Outside Circle -->
-                    <div class="label-pointer sun-pointer"></div>
+                    <!-- Celestial Body Labels -->
                     <div class="celestial-label sun-label">☀️ SUN</div>
-                    
-                    <div class="label-pointer moon-pointer"></div>
                     <div class="celestial-label moon-label">🌑 MOON</div>
-                    
-                    <div class="label-pointer umbra-pointer"></div>
-                    <div class="celestial-label umbra-label">⚫ UMBRA (Dark Shadow)</div>
+                    <div class="celestial-label umbra-label">⚫ UMBRA</div>
 
                     <!-- Orbital paths (for context) -->
                     <div style="position: absolute; width: 280px; height: 280px; border: 1px dashed rgba(255, 235, 59, 0.1); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
@@ -859,10 +738,8 @@
                     <!-- Earth in corner -->
                     <div class="earth">
                         <div class="earth-continents"></div>
-                        <div class="earth-label">Observer</div>
+                        <div class="earth-label">🌍 Earth</div>
                     </div>
-                    <div class="label-pointer earth-pointer"></div>
-                    <div class="earth-label-main">🌍 EARTH</div>
 
                     <div class="reticle">
                         <div class="reticle-h"></div>
@@ -883,29 +760,8 @@
                         <div class="moon-craters"></div>
                     </div>
 
+                    <div class="info-overlay" id="phaseLabel">First Contact</div>
                 </div>
-
-                <!-- Legend Box -->
-                <div class="celestial-legend">
-                    <div class="legend-title">Celestial Bodies</div>
-                    <div class="legend-item legend-item-sun">
-                        <span class="legend-icon">☀️</span>
-                        <span>SUN</span>
-                    </div>
-                    <div class="legend-item legend-item-moon">
-                        <span class="legend-icon">🌑</span>
-                        <span>MOON</span>
-                    </div>
-                    <div class="legend-item legend-item-umbra">
-                        <span class="legend-icon">⚫</span>
-                        <span>UMBRA</span>
-                    </div>
-                    <div class="legend-item legend-item-earth">
-                        <span class="legend-icon">🌍</span>
-                        <span>EARTH</span>
-                    </div>
-                </div>
-            </div>
             </div>
 
             <!-- Scientific Info Panel -->
