@@ -416,31 +416,31 @@
             color: #ffeb3b;
             border-color: #ffeb3b;
             text-shadow: 0 0 10px rgba(255, 235, 59, 0.8);
-            top: -50px;
-            left: 50px;
+            top: 25%;
+            left: -180px;
         }
 
         .moon-label {
             color: #e0e0e0;
             border-color: #e0e0e0;
             text-shadow: 0 0 10px rgba(224, 224, 224, 0.8);
-            top: -50px;
-            right: 50px;
+            top: 25%;
+            right: -180px;
         }
 
         .umbra-label {
             color: #ff6f00;
             border-color: #ff6f00;
             text-shadow: 0 0 10px rgba(255, 111, 0, 0.8);
-            bottom: -60px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 50%;
+            right: -230px;
+            transform: translateY(-50%);
         }
 
         .earth-label-main {
             position: absolute;
-            bottom: -60px;
-            left: 20px;
+            bottom: 10%;
+            left: -180px;
             font-size: 14px;
             font-weight: 700;
             color: #66b3ff;
@@ -456,7 +456,7 @@
 
         .label-pointer {
             position: absolute;
-            width: 2px;
+            height: 2px;
             background: currentColor;
             z-index: 9;
             opacity: 0.6;
@@ -464,34 +464,30 @@
 
         .sun-pointer {
             color: #ffeb3b;
-            height: 40px;
-            top: -10px;
-            left: 100px;
-            transform: rotate(-45deg);
+            width: 70px;
+            top: calc(25% + 20px);
+            left: -110px;
         }
 
         .moon-pointer {
             color: #e0e0e0;
-            height: 40px;
-            top: -10px;
-            right: 100px;
-            transform: rotate(45deg);
+            width: 70px;
+            top: calc(25% + 20px);
+            right: -110px;
         }
 
         .umbra-pointer {
             color: #ff6f00;
-            height: 50px;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 80px;
+            top: 50%;
+            right: -150px;
         }
 
         .earth-pointer {
             color: #66b3ff;
-            height: 50px;
-            bottom: -10px;
-            left: 50px;
-            transform: rotate(-20deg);
+            width: 60px;
+            bottom: calc(10% + 20px);
+            left: -120px;
         }
 
         .corona-label {
