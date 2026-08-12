@@ -234,6 +234,67 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            gap: 30px;
+        }
+
+        .legend-box {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffeb3b;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 180px;
+            box-shadow: 0 0 20px rgba(255, 235, 59, 0.3);
+        }
+
+        .legend-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffeb3b;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .legend-item-sun {
+            color: #ffeb3b;
+            background: rgba(255, 235, 59, 0.1);
+            border-left: 3px solid #ffeb3b;
+        }
+
+        .legend-item-moon {
+            color: #e0e0e0;
+            background: rgba(224, 224, 224, 0.1);
+            border-left: 3px solid #e0e0e0;
+        }
+
+        .legend-item-umbra {
+            color: #ff6f00;
+            background: rgba(255, 111, 0, 0.1);
+            border-left: 3px solid #ff6f00;
+        }
+
+        .legend-item-earth {
+            color: #66b3ff;
+            background: rgba(102, 179, 255, 0.1);
+            border-left: 3px solid #66b3ff;
+        }
+
+        .legend-icon {
+            font-size: 18px;
         }
 
         .telescope-circle {
@@ -727,11 +788,6 @@
                     <div class="sun-distance-label">☀️ 149.6M km</div>
                     <div class="moon-distance-label">🌑 384,400 km</div>
 
-                    <!-- Celestial Body Labels -->
-                    <div class="celestial-label sun-label">☀️ SUN</div>
-                    <div class="celestial-label moon-label">🌑 MOON</div>
-                    <div class="celestial-label umbra-label">⚫ UMBRA</div>
-
                     <!-- Orbital paths (for context) -->
                     <div style="position: absolute; width: 280px; height: 280px; border: 1px dashed rgba(255, 235, 59, 0.1); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0;"></div>
 
@@ -761,6 +817,27 @@
                     </div>
 
                     <div class="info-overlay" id="phaseLabel">First Contact</div>
+                </div>
+
+                <!-- Legend Box beside the circle -->
+                <div class="legend-box">
+                    <div class="legend-title">Celestial Bodies</div>
+                    <div class="legend-item legend-item-sun">
+                        <span class="legend-icon">☀️</span>
+                        <span>SUN</span>
+                    </div>
+                    <div class="legend-item legend-item-moon">
+                        <span class="legend-icon">🌑</span>
+                        <span>MOON</span>
+                    </div>
+                    <div class="legend-item legend-item-umbra">
+                        <span class="legend-icon">⚫</span>
+                        <span>UMBRA</span>
+                    </div>
+                    <div class="legend-item legend-item-earth">
+                        <span class="legend-icon">🌍</span>
+                        <span>EARTH</span>
+                    </div>
                 </div>
             </div>
 
